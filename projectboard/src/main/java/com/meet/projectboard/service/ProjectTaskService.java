@@ -33,5 +33,9 @@ public class ProjectTaskService {
 		return projectTaskRepository.getById(id);
 	}
 
+	public void deleteProjectTaskById(Long id) {
+		
+		projectTaskRepository.deleteById(id);
+	}
 	
 }
