@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +54,14 @@ public class ProjectTaskController {
 		List<ProjectTask> listOfProjectTasks = projectTaskService.getAllProjectTasks();
 		return new ResponseEntity<List<ProjectTask>>(listOfProjectTasks,HttpStatus.OK);
 	
+	}
+	
+	@GetMapping("/{pt_id}")
+	private ResponseEntity<?> getProjectTask(@PathVariable Long pt_id){
+		
+		ProjectTask projectTask = projectTaskService.getProjectTaskById(pt_id);
+		
+		return new ResponseEntity<ProjectTask>(projectTask,HttpStatus.OK);
 	}
 
 }
