@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
-
-
+import axios from 'axios';
 export default class AddProjectTask extends Component {
     constructor(props){
         super(props);
@@ -22,8 +21,28 @@ export default class AddProjectTask extends Component {
     }
 
     onSubmitForm(e){
+       
         e.preventDefault();
-        console.log(this.state);
+        const projectTask = {
+            "summary": this.state.summary,
+            "acceptanceCriteria": this.state.acceptanceCriteria,
+            "status": this.state.status
+        }
+        axios.post(`http://localhost:8081/api/projectboard`, projectTask)
+        .then((res) => {
+            
+            alert("Data sent successfully!");
+            this.setState({
+                summary: "",
+                acceptanceCriteria: "",
+                status: ""
+            })
+
+        })
+        .catch((error) => {
+            console.log(error); 
+        })
+
     }
     render() {
         return (
