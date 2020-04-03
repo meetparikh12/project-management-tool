@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
-export default class AddProjectTask extends Component {
+import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { addProjectTask } from "../../actions/actions";
+import classnames from 'classnames';
+class AddProjectTask extends Component {
     constructor(props){
         super(props);
         this.state = {
             summary: "",
             acceptanceCriteria: "",
-            status: ""
+            status: "",
+            errors: {}
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.errors){
+            this.setState({
+                errors: nextProps.errors
+            })
+        }
+    }
     onChange(e){
         e.preventDefault();
         this.setState({
@@ -28,23 +40,10 @@ export default class AddProjectTask extends Component {
             "acceptanceCriteria": this.state.acceptanceCriteria,
             "status": this.state.status
         }
-        axios.post(`http://localhost:8081/api/projectboard`, projectTask)
-        .then((res) => {
-            
-            alert("Data sent successfully!");
-            this.setState({
-                summary: "",
-                acceptanceCriteria: "",
-                status: ""
-            })
-
-        })
-        .catch((error) => {
-            console.log(error); 
-        })
-
+        this.props.addProjectTask(projectTask,this.props.history);
     }
     render() {
+        const {errors} = this.state;
         return (
             <div>
                 <div className="addProjectTask">
@@ -58,6 +57,7 @@ export default class AddProjectTask extends Component {
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg" name="summary" 
                                         value={this.state.summary} placeholder="Project Task summary" onChange={this.onChange}/>
+                                        <p>{errors.summary}</p> 
                                     </div>
                                     <div className="form-group">
                                         <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" 
@@ -76,9 +76,43 @@ export default class AddProjectTask extends Component {
                                 </form>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
         )
     }
 }
+
+AddProjectTask.propTypes = {
+    addProjectTask : PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired
+}
+const mapStateToProps = state => {
+    return {
+        errors: state.getErrorReducer
+    }
+}
+
+const mapDispatchToProps = dispatchEvent => {
+    return {
+
+        addProjectTask: (projectTask,history) => {
+            axios.post("http://localhost:8081/api/projectboard",projectTask)
+            .then((res) => {
+                console.log(res.data);
+                history.push("/");
+                dispatchEvent(
+                    addProjectTask({})
+                )
+            }).catch((error) => {
+            dispatchEvent(addProjectTask(error.response.data));
+            console.log(error.response.data);})
+            
+            
+        }
+    };
+};
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(AddProjectTask);

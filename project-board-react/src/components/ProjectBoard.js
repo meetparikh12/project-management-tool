@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import ProjectTaskItem from './ProjectTaskItem';
+import { connect } from 'react-redux';
+
 
 class ProjectBoard extends Component {
-    render() {
+    
+    render() {    
         return (
             <div className="ProjectBoard">
                 <div className="container">
@@ -31,7 +34,7 @@ class ProjectBoard extends Component {
                                     </div>
                                 </div>
 
-                                <ProjectTaskItem/>
+                                <ProjectTaskItem />
 
                                 {/* <!-- SAMPLE PROJECT TASK ENDS HERE --> */}
                             </div>
@@ -70,5 +73,6 @@ class ProjectBoard extends Component {
         )
     }
 }
+
 
 export default ProjectBoard;
