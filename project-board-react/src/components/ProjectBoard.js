@@ -34,8 +34,43 @@ class ProjectBoard extends Component {
     }
 
     render() {    
+        
+        let todoItems = [];
+        let inProgressItems = [];
+        let doneItems = [];
+        
+        const projectBoardAlgo = (projectTasks) => {
+            
+            if(projectTasks.length < 1) {
+                return (
+                <div className="alert alert-info text-center" role="alert">No project tasks to be displayed.</div>
+                )
+            }
+            else {
+                const tasks = projectTasks.map((projectTask) => 
+                    
+                    <ProjectTaskItem key={projectTask.id} project_task = {projectTask} />
+                );
+
+                for(let i=0; i<tasks.length; i++){
+                    if(tasks[i].props.project_task.status === "TO_DO"){
+                        todoItems.push(tasks[i]);
+                    }
+                    if (tasks[i].props.project_task.status === "IN_PROGRESS") {
+                        inProgressItems.push(tasks[i]);
+                    }
+                    if (tasks[i].props.project_task.status === "DONE") {
+                        doneItems.push(tasks[i]);
+                    }
+                }
+                
+            }
+        }
+
+        
         return (
             <div className="ProjectBoard">
+                
                 <div className="container">
                     
                     <Link to="/projectTaskForm" className="btn btn-primary mb-3">
@@ -49,8 +84,10 @@ class ProjectBoard extends Component {
                     
                     <div className="container">
                         
+                        {projectBoardAlgo(this.state.project_tasks)}
+                        
                         <div className="row">
-                           
+
                             <div className="col-md-4">
                                 
                                 {/* <!-- SAMPLE PROJECT TASK STARTS HERE --> */ }
@@ -61,7 +98,7 @@ class ProjectBoard extends Component {
                                     </div>
                                 </div>
 
-                                <ProjectTaskItem />
+                                {todoItems}
 
                                 {/* <!-- SAMPLE PROJECT TASK ENDS HERE --> */}
                             </div>
@@ -74,7 +111,7 @@ class ProjectBoard extends Component {
                                     </div>
                                 </div>
 
-                                <ProjectTaskItem/>
+                                {inProgressItems}
 
                             </div>
                            
@@ -86,7 +123,7 @@ class ProjectBoard extends Component {
                                     </div>
                                 </div>
 
-                                <ProjectTaskItem/>
+                                {doneItems}
                                 
                            
                             </div>
