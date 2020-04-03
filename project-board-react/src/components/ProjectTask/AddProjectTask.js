@@ -53,7 +53,7 @@ class AddProjectTask extends Component {
                                 
                                 <Link to="/" className="btn btn-light">Back to Board</Link>
                                 <h4 className="display-4 text-center">Add /Update Project Task</h4>
-                                <form>
+                                <form onSubmit={this.onSubmitForm}>
                                     <div className="form-group">
                                         <input type="text" className={classnames("form-control form-control-lg",{
                                             "is-invalid": errors.summary
@@ -74,7 +74,7 @@ class AddProjectTask extends Component {
                                             <option value="DONE">DONE</option>
                                         </select>
                                     </div>
-                                    <input type="submit" onClick={this.onSubmitForm} className="btn btn-primary btn-block mt-4" />
+                                    <input type="submit" className="btn btn-primary btn-block mt-4" />
                                 </form>
                             </div>
                         </div>
