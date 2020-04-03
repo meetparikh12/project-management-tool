@@ -1,8 +1,9 @@
 import {combineReducers} from 'redux';
-import addProjectTask from './addProjectTask';
 import { errorReducer } from './errorReducer';
+import projectTaskReducer from './projectTaskReducer';
+
 const rootReducer = combineReducers({
-    addProjectTaskReducer : addProjectTask,
+    getProjectTaskReducer : projectTaskReducer,
     getErrorReducer: errorReducer
 })
 export default rootReducer;

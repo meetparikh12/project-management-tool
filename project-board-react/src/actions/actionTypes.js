@@ -1,2 +1,2 @@
-export  const ADD_PROJECT_TASK = 'ADD_PROJECT_TASK';
+export  const GET_PROJECT_TASKS = 'GET_PROJECT_TASKS';
 export const GET_ERRORS = 'GET_ERRORS';

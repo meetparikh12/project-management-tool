@@ -1,5 +1,4 @@
 import * as actionTypes from "./actionTypes";
-import axios from 'axios';
 
 export function addProjectTask(errorResponse){
     
@@ -7,4 +6,11 @@ export function addProjectTask(errorResponse){
     type : actionTypes.GET_ERRORS,
     payload : errorResponse
    }
+}
+
+export function getProjectTasks(project_tasks){
+    return {
+        type: actionTypes.GET_PROJECT_TASKS,
+        payload: project_tasks
+    }
 }

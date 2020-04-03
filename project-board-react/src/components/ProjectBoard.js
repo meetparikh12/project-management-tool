@@ -2,10 +2,36 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import ProjectTaskItem from './ProjectTaskItem';
 import { connect } from 'react-redux';
-
+import axios from 'axios';
+import {getProjectTasks} from '../actions/actions';
 
 class ProjectBoard extends Component {
-    
+    constructor(props){
+        super(props);
+        this.state = {
+            project_tasks: []
+        }
+    }
+
+    componentDidMount(){
+        axios.get("http://localhost:8081/api/projectboard")
+        .then((res) => {
+            this.props.getProjectTasks(res.data);
+            console.log(res.data);
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.projectTasks){
+            this.setState({
+                project_tasks: nextProps.projectTasks
+            })
+        }
+    }
+
     render() {    
         return (
             <div className="ProjectBoard">
@@ -74,5 +100,16 @@ class ProjectBoard extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        projectTasks :  state.getProjectTaskReducer.projectTasks
+    }
+}
 
-export default ProjectBoard;
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        getProjectTasks : (projectTasks) => dispatchEvent(getProjectTasks(projectTasks))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(ProjectBoard);
