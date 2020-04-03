@@ -4,6 +4,7 @@ import ProjectTaskItem from './ProjectTaskItem';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import {getProjectTasks} from '../actions/actions';
+import PropTypes from 'prop-types';
 
 class ProjectBoard extends Component {
     constructor(props){
@@ -98,6 +99,11 @@ class ProjectBoard extends Component {
             </div>
         )
     }
+}
+
+ProjectBoard.propTypes = {
+    getProjectTasks : PropTypes.func.isRequired,
+    projecTasks: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => {
