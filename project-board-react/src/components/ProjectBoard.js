@@ -18,7 +18,6 @@ class ProjectBoard extends Component {
         axios.get("http://localhost:8081/api/projectboard")
         .then((res) => {
             this.props.getProjectTasks(res.data);
-            console.log(res.data);
         })
         .catch((error) => {
             console.log(error)
@@ -54,6 +53,7 @@ class ProjectBoard extends Component {
                 );
 
                 for(let i=0; i<tasks.length; i++){
+                    
                     if(tasks[i].props.project_task.status === "TO_DO"){
                         todoItems.push(tasks[i]);
                     }
@@ -134,10 +134,11 @@ class ProjectBoard extends Component {
 
                     <br />
                     <hr />
+                    {ProjectBoardContent}
+                
                   </div>
 
-                  {ProjectBoardContent}
-                
+                  
             </div>
         )
     }

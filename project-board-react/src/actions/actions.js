@@ -14,3 +14,11 @@ export function getProjectTasks(project_tasks){
         payload: project_tasks
     }
 }
+
+export function deleteProjectTask(id){
+    return {
+        type: actionTypes.DELETE_PROJECT_TASK,
+        payload: id
+    }
+
+}

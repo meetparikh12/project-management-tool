@@ -1,6 +1,29 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { deleteProjectTask } from '../actions/actions';
+import axios from 'axios';
 
-export default class ProjectTaskItem extends Component {
+class ProjectTaskItem extends Component {
+    
+    constructor(props) {
+        super(props);
+        this.deleteProjectTask = this.deleteProjectTask.bind(this);
+    }
+
+    deleteProjectTask(id){
+
+        if(window.confirm(`You are deleting project task ${id}, this action cannot be undone.`))
+        {
+            axios.delete(`http://localhost:8081/api/projectboard/${id}`)
+            .then((res) => {
+                this.props.deleteProjectTask(id);
+            })
+            .catch((error) => console.log(error));
+        }
+    
+    }
+
+
     render() {
         const { project_task } = this.props;
         return (
@@ -20,7 +43,7 @@ export default class ProjectTaskItem extends Component {
                             View / Update
                         </a>
 
-                        <button className="btn btn-danger ml-4">
+                        <button onClick = {() => this.deleteProjectTask(project_task.id)} className="btn btn-danger ml-4">
                             Delete
                         </button>
                     </div>
@@ -31,3 +54,11 @@ export default class ProjectTaskItem extends Component {
         )
     }
 }
+
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        deleteProjectTask : (id) => dispatchEvent(deleteProjectTask(id))
+        }
+    }
+
+export default connect(null,mapDispatchToProps)(ProjectTaskItem);
