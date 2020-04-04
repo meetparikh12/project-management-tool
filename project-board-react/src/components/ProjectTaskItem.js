@@ -12,7 +12,7 @@ class ProjectTaskItem extends Component {
 
     deleteProjectTask(id){
 
-        if(window.confirm(`You are deleting project task ${id}, this action cannot be undone.`))
+        if(window.confirm(`You are deleting Project Task ${id} , this action cannot be undone.`))
         {
             axios.delete(`http://localhost:8081/api/projectboard/${id}`)
             .then((res) => {
