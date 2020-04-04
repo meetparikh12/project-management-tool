@@ -52,7 +52,7 @@ class AddProjectTask extends Component {
                             <div className="col-md-8 m-auto">
                                 
                                 <Link to="/" className="btn btn-light">Back to Board</Link>
-                                <h4 className="display-4 text-center">Add /Update Project Task</h4>
+                                <h4 className="display-4 text-center">Add / Update Project Task</h4>
                                 <form onSubmit={this.onSubmitForm}>
                                     <div className="form-group">
                                         <input type="text" className={classnames("form-control form-control-lg",{

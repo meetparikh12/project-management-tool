@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import ProjectBoard from './components/ProjectBoard';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import AddProjectTask from './components/ProjectTask/AddProjectTask';
+import UpdateProjectTask from './components/ProjectTask/UpdateProjectTask';
 
 
 class App extends Component {
@@ -15,7 +16,8 @@ class App extends Component {
           <div>
             <Navbar/>
             <Route exact path="/" component={ProjectBoard} />
-            <Route path="/projectTaskForm" component={AddProjectTask} />
+            <Route path="/addProjectTask" component={AddProjectTask} />
+            <Route path="/updateProjectTask" component={UpdateProjectTask}/>
           </div>
         </Router>
 

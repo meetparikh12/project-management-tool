@@ -16,7 +16,7 @@ export default class UpdateProjectTask extends Component {
                                     Back to Board
                                 </Link>
                                 
-                                <h4 className="display-4 text-center">Add /Update Project Task</h4>
+                                <h4 className="display-4 text-center">Add / Update Project Task</h4>
                                 <form>
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg" name="summary" placeholder="Project Task summary" />

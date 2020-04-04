@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { deleteProjectTask } from '../actions/actions';
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 class ProjectTaskItem extends Component {
     
@@ -39,9 +40,9 @@ class ProjectTaskItem extends Component {
                         <p className="card-text text-truncate ">
                             {project_task.acceptanceCriteria}
                         </p>
-                        <a href="" className="btn btn-primary">
+                        <Link to="/updateProjectTask" className="btn btn-primary">
                             View / Update
-                        </a>
+                        </Link>
 
                         <button onClick = {() => this.deleteProjectTask(project_task.id)} className="btn btn-danger ml-4">
                             Delete
