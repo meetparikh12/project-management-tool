@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import axios from 'axios';
+import { addProjectTask } from '../../actions/actions';
 
 class UpdateProjectTask extends Component {
 
@@ -12,7 +14,8 @@ class UpdateProjectTask extends Component {
             errors: {},
             summary: '',
             acceptanceCriteria: '',
-            status:''
+            status:'',
+            id: 0
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -22,7 +25,7 @@ class UpdateProjectTask extends Component {
         
         if(nextProps.currentTask){
         this.setState({
-
+            id: nextProps.currentTask.id,
             summary: nextProps.currentTask.summary,
             acceptanceCriteria: nextProps.currentTask.acceptanceCriteria,
             status: nextProps.currentTask.status
@@ -37,7 +40,15 @@ class UpdateProjectTask extends Component {
 
     onSubmit(e){
         e.preventDefault();
-    
+        const updateProjectTask = {
+            "id": this.state.id,
+            "summary": this.state.summary,
+            "acceptanceCriteria": this.state.acceptanceCriteria,
+            "status": this.state.status
+        }
+
+        this.props.updateProjectTask(updateProjectTask,this.props.history);
+        
     }
 
     onChange(e){
@@ -101,4 +112,17 @@ const mapStateToProps = state => {
         errors: state.getErrorReducer
     }
 }
-export default connect(mapStateToProps,null)(UpdateProjectTask);
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        updateProjectTask : (projectTask, history) => {
+            axios.post("http://localhost:8081/api/projectboard", projectTask)
+                .then((res) => {
+                    history.push("/");
+                    console.log(res.data);
+                    dispatchEvent(addProjectTask({}));
+                })
+                .catch((error) => dispatchEvent(addProjectTask(error.response.data)))
+        }
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(UpdateProjectTask);

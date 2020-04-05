@@ -102,19 +102,14 @@ const mapDispatchToProps = dispatchEvent => {
         addProjectTask: (projectTask,history) => {
             axios.post("http://localhost:8081/api/projectboard",projectTask)
             .then((res) => {
-                console.log(res.data);
                 history.push("/");
                 dispatchEvent(
                     addProjectTask({})
                 )
-            }).catch((error) => {
-            dispatchEvent(addProjectTask(error.response.data));
-            console.log(error.response.data);})
-            
-            
+            }).catch((error) => dispatchEvent(addProjectTask(error.response.data)))
         }
     };
-};
+}
 
 
 export default connect(mapStateToProps,mapDispatchToProps)(AddProjectTask);
