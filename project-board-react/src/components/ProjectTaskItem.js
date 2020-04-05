@@ -3,14 +3,22 @@ import { connect } from 'react-redux';
 import { deleteProjectTask } from '../actions/actions';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-
+import {getProjectTask} from '../actions/actions'
 class ProjectTaskItem extends Component {
     
     constructor(props) {
         super(props);
         this.deleteProjectTask = this.deleteProjectTask.bind(this);
+        this.getProjectTask = this.getProjectTask.bind(this);
     }
 
+    getProjectTask(id){
+
+        axios.get(`http://localhost:8081/api/projectboard/${id}`)
+        .then((res) => this.props.getProjectTask(res.data))
+        .catch((error) => console.log(error))
+
+    }
     deleteProjectTask(id){
 
         if(window.confirm(`You are deleting Project Task ${id} , this action cannot be undone.`))
@@ -40,7 +48,10 @@ class ProjectTaskItem extends Component {
                         <p className="card-text text-truncate ">
                             {project_task.acceptanceCriteria}
                         </p>
-                        <Link to="/updateProjectTask" className="btn btn-primary">
+                        <Link to={{
+                            pathname:"/updateProjectTask",
+                         }} 
+                         className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.id)}>
                             View / Update
                         </Link>
 
@@ -58,7 +69,8 @@ class ProjectTaskItem extends Component {
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        deleteProjectTask : (id) => dispatchEvent(deleteProjectTask(id))
+        deleteProjectTask : (id) => dispatchEvent(deleteProjectTask(id)),
+        getProjectTask : (projectTask) => dispatchEvent(getProjectTask(projectTask))
         }
     }
 

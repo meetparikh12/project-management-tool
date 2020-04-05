@@ -2,6 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     projectTasks: [],
+    currentTask: null
 }
 
 const projectTaskReducer = (state = initialState, action) => {
@@ -26,6 +27,11 @@ const projectTaskReducer = (state = initialState, action) => {
                 projectTasks: updatedArray
             }
 
+        case actionTypes.GET_PROJECT_TASK:
+            return {
+                ...state,
+                currentTask: action.payload
+            }
         default: 
             return {
                 state
