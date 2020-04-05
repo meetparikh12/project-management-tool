@@ -1,13 +1,14 @@
-import React from 'react'
+import React from 'react';
+import {Link} from 'react-router-dom';
 
 export default function Navbar() {
     return (
         <div>
             <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-4">
                 <div class="container">
-                    <a class="navbar-brand" href="Dashboard.html">
+                    <Link class="navbar-brand" to="/">
                     Project Task Tool
-                    </a>
+                    </Link>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
                     <span class="navbar-toggler-icon" />
                     </button>

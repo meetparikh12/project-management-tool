@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { deleteProjectTask } from '../actions/actions';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {getProjectTask} from '../actions/actions'
+import {getProjectTask} from '../actions/actions';
+import  PropTypes  from "prop-types";
+
 class ProjectTaskItem extends Component {
     
     constructor(props) {
@@ -48,10 +50,7 @@ class ProjectTaskItem extends Component {
                         <p className="card-text text-truncate ">
                             {project_task.acceptanceCriteria}
                         </p>
-                        <Link to={{
-                            pathname:"/updateProjectTask",
-                         }} 
-                         className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.id)}>
+                        <Link to={`/updateProjectTask/${project_task.id}`} className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.id)}>
                             View / Update
                         </Link>
 
@@ -65,6 +64,11 @@ class ProjectTaskItem extends Component {
             </div>
         )
     }
+}
+ProjectTaskItem.propTypes = {
+
+    deleteProjectTask : PropTypes.func.isRequired,
+    getProjectTask : PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = dispatchEvent => {

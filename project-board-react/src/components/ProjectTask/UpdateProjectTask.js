@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import axios from 'axios';
+import PropTypes from "prop-types";
 import { addProjectTask } from '../../actions/actions';
 
 class UpdateProjectTask extends Component {
@@ -10,7 +11,6 @@ class UpdateProjectTask extends Component {
     constructor(props){
         super(props);
         this.state = {
-            currentTask: {},
             errors: {},
             summary: '',
             acceptanceCriteria: '',
@@ -106,7 +106,15 @@ class UpdateProjectTask extends Component {
     }
 }
 
+UpdateProjectTask.propTypes = {
+    
+    updateProjectTask: PropTypes.func.isRequired,
+    errors: PropTypes.object.isRequired,
+    currentTask : PropTypes.func.isRequired
+}
+
 const mapStateToProps = state => {
+    
     return {
         currentTask: state.getProjectTaskReducer.currentTask,
         errors: state.getErrorReducer
@@ -118,7 +126,6 @@ const mapDispatchToProps = dispatchEvent => {
             axios.post("http://localhost:8081/api/projectboard", projectTask)
                 .then((res) => {
                     history.push("/");
-                    console.log(res.data);
                     dispatchEvent(addProjectTask({}));
                 })
                 .catch((error) => dispatchEvent(addProjectTask(error.response.data)))

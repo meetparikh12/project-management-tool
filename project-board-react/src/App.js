@@ -17,7 +17,7 @@ class App extends Component {
             <Navbar/>
             <Route exact path="/" component={ProjectBoard} />
             <Route path="/addProjectTask" component={AddProjectTask} />
-            <Route path="/updateProjectTask" component={UpdateProjectTask}/>
+            <Route path="/updateProjectTask/:id" component={UpdateProjectTask}/>
           </div>
         </Router>
 
