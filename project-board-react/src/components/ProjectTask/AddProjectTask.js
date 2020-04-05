@@ -107,7 +107,10 @@ const mapDispatchToProps = dispatchEvent => {
                 dispatchEvent(
                     addProjectTask({})
                 )
-            }).catch((error) => dispatchEvent(addProjectTask(error.response.data)))
+            }).catch((error) => {
+                console.log(error);
+                dispatchEvent(addProjectTask(error.response.data));
+            })
         }
     };
 }

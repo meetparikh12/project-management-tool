@@ -107,7 +107,7 @@ class UpdateProjectTask extends Component {
 }
 
 UpdateProjectTask.propTypes = {
-    
+
     updateProjectTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     currentTask : PropTypes.func.isRequired
@@ -128,7 +128,10 @@ const mapDispatchToProps = dispatchEvent => {
                     history.push("/");
                     dispatchEvent(addProjectTask({}));
                 })
-                .catch((error) => dispatchEvent(addProjectTask(error.response.data)))
+                .catch((error) => {
+                    console.log(error);
+                    dispatchEvent(addProjectTask(error.response.data));
+                })
         }
     }
 }
