@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Table(name="project")
 @Entity
@@ -18,14 +19,34 @@ public class Project {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	private Long id;
+	
+	@NotBlank(message="Project name is required")
 	private String projectName; 
+	
+	@NotBlank(message="Project code is required")
 	private String projectIdentifier;
+	
+	@NotBlank(message="Project description is required")
 	private String projectDescription;
+	
 	private Date startDate;
+	
 	private Date endDate;
 	
 	private Date createdAt;
+	
 	private Date updatedAt;
+	
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = new Date();
+	}
+	
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = new Date();
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -74,14 +95,13 @@ public class Project {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = new Date();
+
+	@Override
+	public String toString() {
+		return "Project [id=" + id + ", projectName=" + projectName + ", projectIdentifier=" + projectIdentifier
+				+ ", projectDescription=" + projectDescription + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 	
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = new Date();
-	}
+	
 }

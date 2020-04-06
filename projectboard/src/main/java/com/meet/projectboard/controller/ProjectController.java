@@ -1,13 +1,32 @@
 package com.meet.projectboard.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.meet.projectboard.model.Project;
 import com.meet.projectboard.service.ProjectService;
 
 @RestController
+@CrossOrigin
+@RequestMapping("/api")
 public class ProjectController {
 
 	@Autowired
 	private ProjectService projectService;
+	
+	@PostMapping("/project")
+	private ResponseEntity<?> addProject(@Valid @RequestBody Project project){
+		
+		Project newProject = projectService.saveOrUpdateProject(project);
+		
+		return new ResponseEntity<Project>(newProject,HttpStatus.OK);
+	}
 }
