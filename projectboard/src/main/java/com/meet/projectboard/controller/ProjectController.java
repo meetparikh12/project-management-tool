@@ -1,5 +1,7 @@
 package com.meet.projectboard.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +42,18 @@ public class ProjectController {
 	}
 	
 	@GetMapping("/project/{project_identifier}")
-	private ResponseEntity<?> getProject(@PathVariable String project_identifier) {
+	private ResponseEntity<?> getProjectByIdentifier(@PathVariable String project_identifier) {
 		
 		Project project = projectService.getProject(project_identifier);
 		
 		return new ResponseEntity<Project>(project,HttpStatus.OK);
 
+	}
+	
+	@GetMapping("/project")
+	private ResponseEntity<?> getAllProjects(){
+		
+		List<Project> projects = projectService.getProjects();
+		return new ResponseEntity<List<Project>>(projects,HttpStatus.OK);
 	}
 }
