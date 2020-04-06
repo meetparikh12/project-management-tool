@@ -76,12 +76,12 @@ public class Project {
 	}
 	
 	@PrePersist
-	private void onCreate() {
+	protected void onCreate() {
 		this.createdAt = new Date();
 	}
 	
 	@PreUpdate
-	private void onUpdate() {
+	protected void onUpdate() {
 		this.updatedAt = new Date();
 	}
 }
