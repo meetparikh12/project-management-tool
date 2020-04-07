@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import ProjectItem from './Project/ProjectItem';
+import { Link } from 'react-router-dom';
 class Dashboard extends Component {
     render() {
         return (
             
             <div>
-                <div class="projects">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="display-4 text-center">Projects</h1>
+                <div className="projects">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <h1 className="display-4 text-center">Projects</h1>
                                 <br />
-                                <a href="ProjectForm.html" class="btn btn-lg btn-info">
+                                <Link to="/project/addProject" className="btn btn-lg btn-info">
                                     Create a Project
-                                </a>
+                                </Link>
                                 <br />
                                 <hr />
                                 <ProjectItem/>
