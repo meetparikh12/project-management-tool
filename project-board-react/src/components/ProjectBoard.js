@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
-import ProjectTaskItem from './ProjectTaskItem';
+import ProjectTaskItem from './ProjectTask/ProjectTaskItem';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import {getProjectTasks} from '../actions/actions';

@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import AddProjectTask from './components/ProjectTask/AddProjectTask';
 import UpdateProjectTask from './components/ProjectTask/UpdateProjectTask';
 import AddProject from './components/Project/AddProject';
+import UpdateProject from './components/Project/UpdateProject';
 
 
 class App extends Component {
@@ -18,7 +19,8 @@ class App extends Component {
           <div>
             <Navbar/>
             <Route exact path = "/" component= { Dashboard } />
-            <Route path = "/project/addProject" component = {AddProject}/>
+            <Route path = "/addProject" component = {AddProject}/>
+            <Route path="/updateProject" component = {UpdateProject} />
             <Route exact path="/projectboard" component={ProjectBoard} />
             <Route path="/projectboard/addProjectTask" component={AddProjectTask} />
             <Route path="/projectboard/updateProjectTask/:id" component={UpdateProjectTask}/>

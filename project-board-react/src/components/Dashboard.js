@@ -12,7 +12,7 @@ class Dashboard extends Component {
                             <div className="col-md-12">
                                 <h1 className="display-4 text-center">Projects</h1>
                                 <br />
-                                <Link to="/project/addProject" className="btn btn-lg btn-info">
+                                <Link to="/addProject" className="btn btn-lg btn-info">
                                     Create a Project
                                 </Link>
                                 <br />

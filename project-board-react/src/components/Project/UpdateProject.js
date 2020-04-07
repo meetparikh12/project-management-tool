@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class AddProject extends Component {
+class UpdateProject extends Component {
     render() {
         return (
             <div>
@@ -16,7 +16,7 @@ class AddProject extends Component {
                                     </div>
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg" placeholder="Unique Project ID"
-                                             />
+                                            disabled />
                                     </div>
                                     <div className="form-group">
                                         <textarea className="form-control form-control-lg" placeholder="Project Description"></textarea>
@@ -41,4 +41,4 @@ class AddProject extends Component {
     }
 }
 
-export default AddProject;
+export default UpdateProject;

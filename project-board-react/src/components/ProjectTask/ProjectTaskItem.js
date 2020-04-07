@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { deleteProjectTask } from '../actions/actions';
+import { deleteProjectTask } from '../../actions/actions';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {getProjectTask} from '../actions/actions';
+import {getProjectTask} from '../../actions/actions';
 import  PropTypes  from "prop-types";
 
 class ProjectTaskItem extends Component {
