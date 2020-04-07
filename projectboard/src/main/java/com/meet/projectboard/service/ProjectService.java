@@ -44,5 +44,12 @@ public class ProjectService {
 		return projectRepository.findAll();
 
 	}
+
+	public void deleteProject(String project_identifier) {
+		
+		Project project = getProject(project_identifier);
+		projectRepository.delete(project);
+	
+	}
 	
 }

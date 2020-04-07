@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ import com.meet.projectboard.service.ProjectService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/project")
 public class ProjectController {
 
 	@Autowired
@@ -31,7 +32,7 @@ public class ProjectController {
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
 	
-	@PostMapping("/project")
+	@PostMapping("")
 	private ResponseEntity<?> addProject(@Valid @RequestBody Project project, BindingResult bindingResult){
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
@@ -41,7 +42,7 @@ public class ProjectController {
 		return new ResponseEntity<Project>(newProject,HttpStatus.OK);
 	}
 	
-	@GetMapping("/project/{project_identifier}")
+	@GetMapping("/{project_identifier}")
 	private ResponseEntity<?> getProjectByIdentifier(@PathVariable String project_identifier) {
 		
 		Project project = projectService.getProject(project_identifier);
@@ -50,10 +51,19 @@ public class ProjectController {
 
 	}
 	
-	@GetMapping("/project")
+	@GetMapping("")
 	private ResponseEntity<?> getAllProjects(){
 		
 		List<Project> projects = projectService.getProjects();
 		return new ResponseEntity<List<Project>>(projects,HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/{project_identifier}")
+	private ResponseEntity<?> deleteProjectByIdentifier(@PathVariable String project_identifier){
+		
+		projectService.deleteProject(project_identifier);
+		
+		return new ResponseEntity<String>("Project ID '"+project_identifier +"' has been deleted.",HttpStatus.OK);
+	}
+	
 }
