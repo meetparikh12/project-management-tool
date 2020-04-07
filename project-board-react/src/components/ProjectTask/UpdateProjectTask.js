@@ -68,7 +68,7 @@ class UpdateProjectTask extends Component {
                             <div className="col-md-8 m-auto">
                                 
                                 <Link 
-                                to="/" className="btn btn-light">
+                                to="/projectboard" className="btn btn-light">
                                     Back to Board
                                 </Link>
                                 
@@ -125,7 +125,7 @@ const mapDispatchToProps = dispatchEvent => {
         updateProjectTask : (projectTask, history) => {
             axios.post("http://localhost:8081/api/projectboard", projectTask)
                 .then((res) => {
-                    history.push("/");
+                    history.push("/projectboard");
                     dispatchEvent(addProjectTask({}));
                 })
                 .catch((error) => {

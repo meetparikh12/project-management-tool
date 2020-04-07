@@ -50,7 +50,7 @@ class ProjectTaskItem extends Component {
                         <p className="card-text text-truncate ">
                             {project_task.acceptanceCriteria}
                         </p>
-                        <Link to={`/updateProjectTask/${project_task.id}`} className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.id)}>
+                        <Link to={`/projectboard/updateProjectTask/${project_task.id}`} className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.id)}>
                             View / Update
                         </Link>
 

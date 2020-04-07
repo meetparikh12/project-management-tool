@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './components/Navbar';
 import ProjectBoard from './components/ProjectBoard';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
 import AddProjectTask from './components/ProjectTask/AddProjectTask';
 import UpdateProjectTask from './components/ProjectTask/UpdateProjectTask';
 
@@ -15,9 +16,10 @@ class App extends Component {
       <Router>
           <div>
             <Navbar/>
-            <Route exact path="/" component={ProjectBoard} />
-            <Route path="/addProjectTask" component={AddProjectTask} />
-            <Route path="/updateProjectTask/:id" component={UpdateProjectTask}/>
+            <Route exact path = "/" component= { Dashboard } />
+            <Route exact path="/projectboard" component={ProjectBoard} />
+            <Route path="/projectboard/addProjectTask" component={AddProjectTask} />
+            <Route path="/projectboard/updateProjectTask/:id" component={UpdateProjectTask}/>
           </div>
         </Router>
 
