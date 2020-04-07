@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 class ProjectItem extends Component {
     render() {
         return (
-            <div>
+            <div className="ProjectItem">
                 <div className="container">
                     <div className="card card-body bg-light mb-3">
                         <div className="row">

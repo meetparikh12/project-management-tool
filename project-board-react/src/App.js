@@ -16,16 +16,16 @@ class App extends Component {
     return (
 
       <Router>
-          <div>
-            <Navbar/>
-            <Route exact path = "/" component= { Dashboard } />
-            <Route path = "/addProject" component = {AddProject}/>
-            <Route path="/updateProject" component = {UpdateProject} />
-            <Route exact path="/projectboard" component={ProjectBoard} />
-            <Route path="/projectboard/addProjectTask" component={AddProjectTask} />
-            <Route path="/projectboard/updateProjectTask/:id" component={UpdateProjectTask}/>
-          </div>
-        </Router>
+        <div className="App">
+          <Navbar/>
+          <Route exact path = "/" component= { Dashboard } />
+          <Route path = "/addProject" component = {AddProject}/>
+          <Route path="/updateProject" component = {UpdateProject} />
+          <Route exact path="/projectboard" component={ProjectBoard} />
+          <Route path="/projectboard/addProjectTask" component={AddProjectTask} />
+          <Route path="/projectboard/updateProjectTask/:id" component={UpdateProjectTask}/>
+        </div>
+      </Router>
 
      )
   }

@@ -38,7 +38,7 @@ class ProjectTaskItem extends Component {
     render() {
         const { project_task } = this.props;
         return (
-            <div>
+            <div className="ProjectTaskItem">
                 <div className="card mb-1 bg-light">
 
                     <div className="card-header text-primary">
