@@ -31,7 +31,21 @@ class AddProject extends Component {
             "startDate" : this.state.start_date,
             "endDate" : this.state.end_date
         }
-        console.log(newProject);
+
+        axios
+        .post("http://localhost:8081/api/project",newProject)
+        .then((res) => {
+            alert(`Project with ID '${res.data.projectIdentifier}' created successfully.`);
+            this.setState({
+                projectName: '',
+                projectIdentifier: '',
+                projectDescription: '',
+                start_date: '',
+                end_date: ''
+            })
+        })
+        .catch((error) => console.log(error))
+    
     }
 
     render() {
