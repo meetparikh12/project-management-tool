@@ -28,3 +28,10 @@ export function getProjectTask(projectTask){
         payload: projectTask
     }
 }
+
+export function addProject(error){
+    return {
+        type: actionTypes.GET_PROJECT_ERROR,
+        payload: error
+    }
+}
