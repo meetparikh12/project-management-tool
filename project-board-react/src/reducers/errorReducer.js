@@ -2,7 +2,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     project_task_error: {},
-    proeject_error: {}
+    project_error: {}
 }
 
 export const errorReducer = (state = initialState, action) => {

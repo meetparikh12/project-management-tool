@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { addProject } from '../../actions/actions';
 
 class AddProject extends Component {
     constructor(props){
@@ -44,7 +46,10 @@ class AddProject extends Component {
                 end_date: ''
             })
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+            this.props.getProjectErrors(error.response.data);
+            console.log(error);
+        })
     
     }
 
@@ -88,4 +93,23 @@ class AddProject extends Component {
     }
 }
 
-export default AddProject;
+const mapStateToProps = (state) => {
+
+    return {
+        projectTaskError: state.getErrorReducer.project_error
+    }
+}
+
+const mapDispatchToProps = dispatchEvent => {
+    
+    return {
+        getProjectErrors: (error) => {
+            dispatchEvent(addProject(error));
+        } 
+    }
+
+}
+
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(AddProject);
