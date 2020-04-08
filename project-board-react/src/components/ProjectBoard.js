@@ -100,7 +100,6 @@ class ProjectBoard extends Component {
                                 </div>
                             
                                 <div className="col-md-4">
-
                                     <div className="card text-center mb-2">
                                         <div className="card-header bg-success text-white">
                                             <h3>Done</h3>
@@ -109,12 +108,9 @@ class ProjectBoard extends Component {
 
                                     {doneItems}
                                     
-                            
                                 </div>
-
                             </div>
                         </div>
-            
                     </React.Fragment>
                 );
             }
