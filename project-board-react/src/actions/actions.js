@@ -42,3 +42,10 @@ export function getProjects(projects){
         payload: projects
     }
 }
+
+export function deleteProject(projectID) {
+    return {
+        type: actionTypes.DELETE_PROJECT,
+        payload: projectID
+    }
+}

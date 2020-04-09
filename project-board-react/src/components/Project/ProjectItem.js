@@ -1,7 +1,30 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
+import Axios from 'axios';
+import { connect } from 'react-redux';
+import { deleteProject } from '../../actions/actions';
 
 class ProjectItem extends Component {
+    
+    constructor(props){
+        super(props);
+        this.deleteProject = this.deleteProject.bind(this);
+    }
+
+    deleteProject(projectID){
+
+        if(window.confirm(`You are deleting Project with ID '${projectID}' , this action cannot be undone.`)) {
+            Axios
+            .delete(`http://localhost:8081/api/project/${projectID}`)
+            .then((res) => {
+                console.log(res.data)
+                this.props.deleteProject(projectID)
+            })
+            .catch((error) => console.log(error))
+            console.log("GELO");
+        }
+    }
+
     render() {
         const { project } = this.props;
         return (
@@ -28,11 +51,11 @@ class ProjectItem extends Component {
                                             <i className="fa fa-edit pr-1"> Update Project Info</i>
                                         </li>
                                     </Link>
-                                    <a href="">
+                                    <Link to="/" onClick={this.deleteProject.bind(this,project.projectIdentifier)}>
                                         <li className="list-group-item delete">
                                             <i className="fa fa-minus-circle pr-1"> Delete Project</i>
                                         </li>
-                                    </a>
+                                    </Link>
                                 </ul>
                             </div>
                         </div>
@@ -43,4 +66,9 @@ class ProjectItem extends Component {
     }
 }
 
-export default ProjectItem;
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        deleteProject : (projectID) => dispatchEvent(deleteProject(projectID))
+    }
+}
+export default connect(null,mapDispatchToProps)(ProjectItem);

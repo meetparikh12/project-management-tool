@@ -7,10 +7,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
 class Dashboard extends Component {
-    constructor(props) {
-        super(props);
-    }
-
+  
     componentDidMount(){
         
         axios
@@ -73,4 +70,5 @@ const mapDispatchToProps = dispatchEvent => {
         getProjects : (projects) => dispatchEvent(getProjects(projects))
     }
 }
+
 export default connect(mapStateToProps,mapDispatchToProps)(Dashboard);
