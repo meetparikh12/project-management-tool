@@ -46,7 +46,7 @@ class AddProject extends Component {
         }
 
         axios
-        .post("http://localhost:8081/api/project",newProject)
+        .post("/api/project",newProject)
         .then((res) => {
             alert(`Project with ID '${res.data.projectIdentifier}' created successfully.`);
             this.props.history.push("/");

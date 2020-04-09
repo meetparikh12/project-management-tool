@@ -122,7 +122,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatchEvent => {
     return {
         updateProjectTask : (projectTask, history) => {
-            axios.post("http://localhost:8081/api/projectboard", projectTask)
+            axios.post("/api/projectboard", projectTask)
                 .then((res) => {
                     history.push("/projectboard");
                     dispatchEvent(addProjectTask({}));

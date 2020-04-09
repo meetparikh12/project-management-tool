@@ -16,7 +16,7 @@ class ProjectItem extends Component {
 
         if(window.confirm(`You are deleting Project with ID '${projectID}' , this action cannot be undone.`)) {
             Axios
-            .delete(`http://localhost:8081/api/project/${projectID}`)
+            .delete(`/api/project/${projectID}`)
             .then((res) => {
                 console.log(res.data)
                 this.props.deleteProject(projectID)

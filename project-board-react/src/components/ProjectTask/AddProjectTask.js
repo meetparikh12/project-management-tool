@@ -100,7 +100,7 @@ const mapDispatchToProps = dispatchEvent => {
     return {
 
         addProjectTask: (projectTask,history) => {
-            axios.post("http://localhost:8081/api/projectboard",projectTask)
+            axios.post("/api/projectboard",projectTask)
             .then((res) => {
                 history.push("/projectboard");
                 dispatchEvent(

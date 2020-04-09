@@ -15,7 +15,7 @@ class ProjectBoard extends Component {
     }
 
     componentDidMount(){
-        axios.get("http://localhost:8081/api/projectboard")
+        axios.get("/api/projectboard")
         .then((res) => {
             this.props.getProjectTasks(res.data);
         })

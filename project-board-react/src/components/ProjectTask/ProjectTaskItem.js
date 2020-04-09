@@ -16,7 +16,7 @@ class ProjectTaskItem extends Component {
 
     getProjectTask(id){
 
-        axios.get(`http://localhost:8081/api/projectboard/${id}`)
+        axios.get(`/api/projectboard/${id}`)
         .then((res) => this.props.getProjectTask(res.data))
         .catch((error) => console.log(error))
 
@@ -25,7 +25,7 @@ class ProjectTaskItem extends Component {
 
         if(window.confirm(`You are deleting Project Task ${id} , this action cannot be undone.`))
         {
-            axios.delete(`http://localhost:8081/api/projectboard/${id}`)
+            axios.delete(`/api/projectboard/${id}`)
             .then((res) => {
                 this.props.deleteProjectTask(id);
             })

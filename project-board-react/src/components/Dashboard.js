@@ -11,7 +11,7 @@ class Dashboard extends Component {
     componentDidMount(){
         
         axios
-        .get("http://localhost:8081/api/project")
+        .get("/api/project")
         .then((res) => this.props.getProjects(res.data))
         .catch((error) => console.log(error))
     }
