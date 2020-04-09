@@ -3,6 +3,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { addProject } from '../../actions/actions';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 class AddProject extends Component {
     constructor(props){
@@ -114,6 +115,13 @@ class AddProject extends Component {
     }
 }
 
+AddProject.propTypes = {
+
+    projectError : PropTypes.object.isRequired,
+    getProjectErrors : PropTypes.func.isRequired
+
+}
+
 const mapStateToProps = (state) => {
     return {
         projectError: state.getErrorReducer.project_error
@@ -123,9 +131,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatchEvent => {
     
     return {
+        
         getProjectErrors: (error) => {
             dispatchEvent(addProject(error));
-        } 
+        }
+         
     }
 
 }
