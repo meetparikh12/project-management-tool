@@ -134,8 +134,7 @@ const mapDispatchToProps = dispatchEvent => {
         
         getProjectErrors: (error) => {
             dispatchEvent(addProject(error));
-        }
-         
+        } 
     }
 
 }

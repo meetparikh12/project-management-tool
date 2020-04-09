@@ -1,8 +1,29 @@
 import React, { Component } from 'react';
 import ProjectItem from './Project/ProjectItem';
 import CreateProjectButton from './Project/CreateProjectButton';
+import axios from 'axios';
+import { getProjects } from '../actions/actions';
+import { connect } from 'react-redux';
 
 class Dashboard extends Component {
+    constructor(props){
+        super(props);
+        
+    }
+    componentDidMount(){
+        
+        axios
+        .get("http://localhost:8081/api/project")
+        .then((res) => this.props.getProjects(res.data))
+        .catch((error) => console.log(error))
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.projects){
+            console.log(nextProps.projects);
+        }
+    }
+
     render() {
         return (
             
@@ -24,5 +45,14 @@ class Dashboard extends Component {
         )
     }
 }
-
-export default Dashboard;
+const mapStateToProps = state => {
+    return {
+        projects : state.getProjectReducer.projects
+    }
+}
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        getProjects : (projects) => dispatchEvent(getProjects(projects))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Dashboard);

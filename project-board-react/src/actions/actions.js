@@ -35,3 +35,10 @@ export function addProject(error){
         payload: error
     }
 }
+
+export function getProjects(projects){
+    return {
+        type: actionTypes.GET_PROJECTS,
+        payload: projects
+    }
+}
