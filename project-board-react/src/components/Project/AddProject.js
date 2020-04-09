@@ -48,6 +48,8 @@ class AddProject extends Component {
         .post("http://localhost:8081/api/project",newProject)
         .then((res) => {
             alert(`Project with ID '${res.data.projectIdentifier}' created successfully.`);
+            this.props.history.push("/");
+            this.props.getProjectErrors({});
             this.setState({
                 projectName: '',
                 projectIdentifier: '',
