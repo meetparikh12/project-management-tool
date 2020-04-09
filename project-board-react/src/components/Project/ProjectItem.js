@@ -3,17 +3,18 @@ import {Link} from 'react-router-dom';
 
 class ProjectItem extends Component {
     render() {
+        const { project } = this.props;
         return (
             <div className="ProjectItem">
                 <div className="container">
                     <div className="card card-body bg-light mb-3">
                         <div className="row">
                             <div className="col-2">
-                                <span className="mx-auto">{this.props.projectID}</span>
+                                <span className="mx-auto">{project.projectIdentifier}</span>
                             </div>
                             <div className="col-lg-6 col-md-4 col-8">
-                                <h3>{this.props.projectName}</h3>
-                                <p>{this.props.projectDescription}</p>
+                                <h3>{project.projectName}</h3>
+                                <p>{project.projectDescription}</p>
                             </div>
                             <div className="col-md-4 d-none d-lg-block">
                                 <ul className="list-group">

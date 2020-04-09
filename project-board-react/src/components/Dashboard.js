@@ -4,15 +4,13 @@ import CreateProjectButton from './Project/CreateProjectButton';
 import axios from 'axios';
 import { getProjects } from '../actions/actions';
 import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
 
 class Dashboard extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = {
-            projects: []
-        }
-        
     }
+
     componentDidMount(){
         
         axios
@@ -21,30 +19,21 @@ class Dashboard extends Component {
         .catch((error) => console.log(error))
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.projects){
-            this.setState({
-                projects: nextProps.projects
-            })
-        }
-    }
-
     render() {
+
+        const { projects } = this.props;
 
         let projectItem = [];
 
-        if(this.state.projects.length < 1) {
+        if(projects.length < 1) {
             
             projectItem = (<div className="alert alert-info text-center" role="alert">
                 No projects to be displayed.</div>)
         
         } else {
             
-            projectItem = this.state.projects.map((project) => {
-            
-                return <ProjectItem key={project.projectIdentifier} projectName={project.projectName} 
-                projectDescription={project.projectDescription} projectID = {project.projectIdentifier} />
-        
+            projectItem = projects.map((project) => {
+                return <ProjectItem key={project.projectIdentifier} project = {project} />
             })
         }   
 
@@ -68,6 +57,12 @@ class Dashboard extends Component {
         )
     }
 }
+
+Dashboard.propTypes = {
+    projects: PropTypes.object.isRequired,
+    getProjects: PropTypes.func.isRequired
+}
+
 const mapStateToProps = state => {
     return {
         projects : state.getProjectReducer.projects
