@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import Axios from 'axios';
 import { connect } from 'react-redux';
 import { deleteProject } from '../../actions/actions';
+import PropTypes from 'prop-types';
 
 class ProjectItem extends Component {
     
@@ -64,6 +65,10 @@ class ProjectItem extends Component {
             </div>
         )
     }
+}
+
+ProjectItem.propTypes = {
+    deleteProject : PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = dispatchEvent => {
