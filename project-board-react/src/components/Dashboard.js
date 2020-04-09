@@ -8,6 +8,9 @@ import { connect } from 'react-redux';
 class Dashboard extends Component {
     constructor(props){
         super(props);
+        this.state = {
+            projects: []
+        }
         
     }
     componentDidMount(){
@@ -20,11 +23,21 @@ class Dashboard extends Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.projects){
-            console.log(nextProps.projects);
+            this.setState({
+                projects: nextProps.projects
+            })
         }
     }
 
     render() {
+
+        const projectItem = this.state.projects.map((project) => {
+            
+            return <ProjectItem key={project.projectIdentifier} projectName={project.projectName} 
+            projectDescription={project.projectDescription} projectID = {project.projectIdentifier} />
+        
+        })
+
         return (
             
             <div className="DashBoard">
@@ -36,7 +49,7 @@ class Dashboard extends Component {
                                 <br />
                                 <CreateProjectButton/>
                                 <hr />
-                                <ProjectItem/>
+                                {projectItem}
                             </div>
                         </div>
                     </div>
