@@ -31,12 +31,22 @@ class Dashboard extends Component {
 
     render() {
 
-        const projectItem = this.state.projects.map((project) => {
+        let projectItem = [];
+
+        if(this.state.projects.length < 1) {
             
-            return <ProjectItem key={project.projectIdentifier} projectName={project.projectName} 
-            projectDescription={project.projectDescription} projectID = {project.projectIdentifier} />
+            projectItem = (<div className="alert alert-info text-center" role="alert">
+                No projects to be displayed.</div>)
         
-        })
+        } else {
+            
+            projectItem = this.state.projects.map((project) => {
+            
+                return <ProjectItem key={project.projectIdentifier} projectName={project.projectName} 
+                projectDescription={project.projectDescription} projectID = {project.projectIdentifier} />
+        
+            })
+        }   
 
         return (
             
