@@ -15,7 +15,9 @@ class ProjectItem extends Component {
     getProject(id){
         axios
         .get(`/api/project/${id}`)
-        .then((res)=> console.log(res.data))
+        .then((res)=> {
+            console.log(res.data);
+        })
         .catch((error) => console.log(error))
     }
 
