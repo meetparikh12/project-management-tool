@@ -1,7 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    projects : []
+    projects : [],
+    currentProject : {}
 }
 
 const projectReducer = (state=initialState, action) => {
@@ -19,6 +20,11 @@ const projectReducer = (state=initialState, action) => {
                 projects: state.projects.filter((project) => project.projectIdentifier !== action.payload)
             }
 
+        case actionTypes.GET_SINGLE_PROJECT:
+            return {
+                ...state,
+                currentProject: action.payload
+            }
         default:
             return {
                 ...state
