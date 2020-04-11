@@ -49,7 +49,10 @@ class UpdateProject extends Component {
         }
         Axios
         .post("/api/project",updatedProject)
-        .then((res) => console.log(res.data))
+        .then((res) => {
+            console.log(res.data);
+            this.props.history.push("/")
+        })
         .catch((error) => console.log(error))
     }
 
