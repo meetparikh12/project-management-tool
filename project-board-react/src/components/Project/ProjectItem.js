@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
-import Axios from 'axios';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { deleteProject } from '../../actions/actions';
 import PropTypes from 'prop-types';
@@ -12,10 +12,17 @@ class ProjectItem extends Component {
         this.deleteProject = this.deleteProject.bind(this);
     }
 
+    getProject(id){
+        axios
+        .get(`/api/project/${id}`)
+        .then((res)=> console.log(res.data))
+        .catch((error) => console.log(error))
+    }
+
     deleteProject(projectID){
 
         if(window.confirm(`You are deleting Project with ID '${projectID}' , this action cannot be undone.`)) {
-            Axios
+            axios
             .delete(`/api/project/${projectID}`)
             .then((res) => {
                 console.log(res.data)
@@ -47,7 +54,7 @@ class ProjectItem extends Component {
                                             <i className="fa fa-flag-checkered pr-1"> Project Board </i>
                                         </li>
                                     </Link>
-                                    <Link to="/updateProject">
+                                    <Link to="/updateProject" onClick={this.getProject.bind(this,project.projectIdentifier)}>
                                         <li className="list-group-item update">
                                             <i className="fa fa-edit pr-1"> Update Project Info</i>
                                         </li>
