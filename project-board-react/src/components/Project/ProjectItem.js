@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { deleteProject } from '../../actions/actions';
+import { deleteProject, getProjectById } from '../../actions/actions';
 import PropTypes from 'prop-types';
-
 class ProjectItem extends Component {
     
     constructor(props){
@@ -17,6 +16,7 @@ class ProjectItem extends Component {
         .get(`/api/project/${id}`)
         .then((res)=> {
             console.log(res.data);
+            this.props.getProjectById(res.data);
         })
         .catch((error) => console.log(error))
     }
@@ -77,12 +77,14 @@ class ProjectItem extends Component {
 }
 
 ProjectItem.propTypes = {
-    deleteProject : PropTypes.func.isRequired
+    deleteProject : PropTypes.func.isRequired,
+    getProjectById : PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        deleteProject : (projectID) => dispatchEvent(deleteProject(projectID))
+        deleteProject : (projectID) => dispatchEvent(deleteProject(projectID)),
+        getProjectById : (project) => dispatchEvent(getProjectById(project))
     }
 }
 export default connect(null,mapDispatchToProps)(ProjectItem);
