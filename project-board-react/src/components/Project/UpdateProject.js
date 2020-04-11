@@ -1,25 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Axios from 'axios';
 
 class UpdateProject extends Component {
     
     constructor(props){
         super(props);
         this.state = {
+            id:"",
             start_date:"",
             end_date:"",
             project_name:"",
-            project_description:""
+            project_description:"",
+            project_identifier: ""
         }
         this.onChange = this.onChange.bind(this);
-   //     this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
     
     componentWillReceiveProps(nextProps){
         if(nextProps.current_project)
         this.setState({
+            id: nextProps.current_project.id,
             project_name: nextProps.current_project.projectName,
+            project_identifier: nextProps.current_project.projectIdentifier,
             project_description: nextProps.current_project.projectDescription,
             start_date: nextProps.current_project.startDate,
             end_date: nextProps.current_project.endDate
@@ -32,9 +37,23 @@ class UpdateProject extends Component {
         })
     }
 
+    onSubmit(e){
+        e.preventDefault();
+        const updatedProject = {
+            id: this.state.id,
+            projectName: this.state.project_name,
+            projectIdentifier : this.state.project_identifier,
+            projectDescription: this.state.project_description,
+            startDate: this.state.start_date,
+            endDate: this.state.end_date
+        }
+        Axios
+        .post("/api/project",updatedProject)
+        .then((res) => console.log(res.data))
+        .catch((error) => console.log(error))
+    }
 
     render() {
-        const { current_project } = this.props;
         return (
             <div className="UpdateProject">
                 <div className="project">
@@ -43,14 +62,14 @@ class UpdateProject extends Component {
                             <div className="col-md-8 m-auto">
                                 <h5 className="display-4 text-center">Create / Edit Project form</h5>
                                 <hr />
-                                <form>
+                                <form onSubmit = {this.onSubmit} >
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg " 
                                         name="project_name" onChange = {this.onChange} value = {this.state.project_name} placeholder="Project Name" />
                                     </div>
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg" 
-                                        name="projectIdentifier" value={current_project.projectIdentifier} 
+                                        name="projectIdentifier" value={this.state.project_identifier} 
                                         placeholder="Unique Project ID" disabled />
                                     </div>
                                     <div className="form-group">
