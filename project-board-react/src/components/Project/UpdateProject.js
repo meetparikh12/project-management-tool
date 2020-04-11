@@ -1,7 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 class UpdateProject extends Component {
+    
     render() {
+        const { currentProject } = this.props;
         return (
             <div className="UpdateProject">
                 <div className="project">
@@ -12,22 +16,22 @@ class UpdateProject extends Component {
                                 <hr />
                                 <form>
                                     <div className="form-group">
-                                        <input type="text" className="form-control form-control-lg " placeholder="Project Name" />
+                                        <input type="text" className="form-control form-control-lg " value = {currentProject.projectName} placeholder="Project Name" />
                                     </div>
                                     <div className="form-group">
-                                        <input type="text" className="form-control form-control-lg" placeholder="Unique Project ID"
-                                            disabled />
+                                        <input type="text" className="form-control form-control-lg" value={currentProject.projectIdentifier} 
+                                        placeholder="Unique Project ID" disabled />
                                     </div>
                                     <div className="form-group">
-                                        <textarea className="form-control form-control-lg" placeholder="Project Description"></textarea>
+                                        <textarea className="form-control form-control-lg" value = {currentProject.projectDescription} placeholder="Project Description"></textarea>
                                     </div>
                                     <h6>Start Date</h6>
                                     <div className="form-group">
-                                        <input type="date" className="form-control form-control-lg" name="start_date" />
+                                        <input type="date" className="form-control form-control-lg" value = {currentProject.startDate} name="start_date" />
                                     </div>
                                     <h6>Estimated End Date</h6>
                                     <div className="form-group">
-                                        <input type="date" className="form-control form-control-lg" name="end_date" />
+                                        <input type="date" className="form-control form-control-lg" value = {currentProject.endDate} name="end_date" />
                                     </div>
 
                                     <input type="submit" className="btn btn-primary btn-block mt-4" />
@@ -40,5 +44,15 @@ class UpdateProject extends Component {
         )
     }
 }
+UpdateProject.propTypes = {
+    currentProject : PropTypes.object.isRequired
+}
 
-export default UpdateProject;
+const mapStateToProps = state => {
+    return {
+        currentProject : state.getProjectReducer.currentProject
+    }
+}
+
+
+export default connect(mapStateToProps,null)(UpdateProject);
