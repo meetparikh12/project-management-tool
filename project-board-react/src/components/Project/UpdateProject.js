@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Axios from 'axios';
+import axios from 'axios';
+import  {addProject} from '../../actions/actions';
 
 class UpdateProject extends Component {
     
@@ -13,7 +14,8 @@ class UpdateProject extends Component {
             end_date:"",
             project_name:"",
             project_description:"",
-            project_identifier: ""
+            project_identifier: "",
+            error: {}
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -29,6 +31,13 @@ class UpdateProject extends Component {
             start_date: nextProps.current_project.startDate,
             end_date: nextProps.current_project.endDate
         })
+        if(nextProps.error){
+            this.setState({
+                error: nextProps.error
+            }, () => {
+                console.log(this.state.error)
+            })
+        }
     }
 
     onChange(e){
@@ -47,13 +56,7 @@ class UpdateProject extends Component {
             startDate: this.state.start_date,
             endDate: this.state.end_date
         }
-        Axios
-        .post("/api/project",updatedProject)
-        .then((res) => {
-            console.log(res.data);
-            this.props.history.push("/")
-        })
-        .catch((error) => console.log(error))
+      this.props.updateProject(updatedProject,this.props.history);
     }
 
     render() {
@@ -101,14 +104,34 @@ class UpdateProject extends Component {
     }
 }
 UpdateProject.propTypes = {
-    current_project : PropTypes.object.isRequired
+    current_project : PropTypes.object.isRequired,
+    error: PropTypes.object.isRequired,
+    updateProject : PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
     return {
-        current_project : state.getProjectReducer.currentProject
+        current_project : state.getProjectReducer.currentProject,
+        error: state.getErrorReducer.projectError
     }
 }
 
+const mapDispatchToProps = dispatchEvent => {
+    return {
+        updateProject : (project,history) => {
+            axios
+                .post("/api/project", project)
+                .then((res) => {
+                    console.log(res.data);
+                    history.push("/");
+                    dispatchEvent(addProject({}));
+                })
+                .catch((error) => {
+                    dispatchEvent(addProject(error.response.data))
+                    console.log(error);
+                })
+        }
+    }
+}
 
-export default connect(mapStateToProps,null)(UpdateProject);
+export default connect(mapStateToProps,mapDispatchToProps)(UpdateProject);
