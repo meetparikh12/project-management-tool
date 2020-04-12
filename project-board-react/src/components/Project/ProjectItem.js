@@ -56,7 +56,7 @@ class ProjectItem extends Component {
                                             <i className="fa fa-flag-checkered pr-1"> Project Board </i>
                                         </li>
                                     </Link>
-                                    <Link to="/updateProject" onClick={this.getProject.bind(this,project.projectIdentifier)}>
+                                    <Link to={`/updateProject/${project.projectIdentifier}`} onClick={this.getProject.bind(this,project.projectIdentifier)}>
                                         <li className="list-group-item update">
                                             <i className="fa fa-edit pr-1"> Update Project Info</i>
                                         </li>

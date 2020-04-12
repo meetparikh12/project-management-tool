@@ -116,7 +116,7 @@ const mapStateToProps = state => {
     
     return {
         currentTask: state.getProjectTaskReducer.currentTask,
-        errors: state.getErrorReducer
+        errors: state.getErrorReducer.project_task_error
     }
 }
 const mapDispatchToProps = dispatchEvent => {
