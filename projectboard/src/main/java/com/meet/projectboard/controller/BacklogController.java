@@ -41,7 +41,7 @@ public class BacklogController {
 		
 		ProjectTask newProjectTask = projectTaskService.addProjectTask(backlog_id, projectTask);
 		
-		return new ResponseEntity<ProjectTask>(newProjectTask,HttpStatus.OK);
+		return new ResponseEntity<ProjectTask>(newProjectTask,HttpStatus.CREATED);
 	}
 	
 	@GetMapping("")
@@ -52,12 +52,10 @@ public class BacklogController {
 	
 	}
 	
-	@GetMapping("/{pt_id}")
-	private ResponseEntity<?> getProjectTask(@PathVariable Long pt_id){
-		
-		ProjectTask projectTask = projectTaskService.getProjectTaskById(pt_id);
-		
-		return new ResponseEntity<ProjectTask>(projectTask,HttpStatus.OK);
+	@GetMapping("/backlog/{backlog_id}")
+	private Iterable<ProjectTask> getProjectTask(@PathVariable String backlog_id){
+				
+		return projectTaskService.getProjectTaskById(backlog_id);
 	}
 
 	@DeleteMapping("/{pt_id}")

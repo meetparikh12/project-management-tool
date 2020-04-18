@@ -57,9 +57,9 @@ public class ProjectTaskService {
 		return projectTaskRepository.findAll();
 	}
 
-	public ProjectTask getProjectTaskById(Long id) {
+	public Iterable<ProjectTask> getProjectTaskById(String projectIdentifier) {
 		
-		return projectTaskRepository.getById(id);
+		return projectTaskRepository.findByProjectIdentifierOrderByPriority(projectIdentifier);
 	}
 
 	public void deleteProjectTaskById(Long id) {
