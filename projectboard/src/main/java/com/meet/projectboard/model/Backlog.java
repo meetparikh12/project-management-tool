@@ -34,6 +34,10 @@ public class Backlog {
 	public void setProjectIdentifier(String projectIdentifier) {
 		this.projectIdentifier = projectIdentifier;
 	}
+	@Override
+	public String toString() {
+		return "Backlog [id=" + id + ", PTSequence=" + PTSequence + ", projectIdentifier=" + projectIdentifier + "]";
+	}
 	
 	
 }
