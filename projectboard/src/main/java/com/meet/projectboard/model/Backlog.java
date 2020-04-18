@@ -1,5 +1,8 @@
 package com.meet.projectboard.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -26,11 +30,25 @@ public class Backlog {
 	@JoinColumn(name="project_id", nullable = false)
 	@JsonIgnore
 	private Project project;
-
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "backlog")
+	private List<ProjectTask> projectTasks = new ArrayList<ProjectTask>();
+	
 	public Long getId() {
 		return id;
 	}
 	
+	
+	public List<ProjectTask> getProjectTasks() {
+		return projectTasks;
+	}
+
+
+	public void setProjectTasks(List<ProjectTask> projectTasks) {
+		this.projectTasks = projectTasks;
+	}
+
+
 	public Project getProject() {
 		return project;
 	}
