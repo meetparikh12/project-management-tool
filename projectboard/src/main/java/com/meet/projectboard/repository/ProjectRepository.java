@@ -9,4 +9,6 @@ import com.meet.projectboard.model.Project;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 	Project getByProjectIdentifier(String projectIdentifier);
+	
+	boolean existsByProjectIdentifier(String projectIdentifier);
 }
