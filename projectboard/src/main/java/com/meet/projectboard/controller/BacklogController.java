@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ import com.meet.projectboard.service.ProjectTaskService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/api/backlog")
 public class BacklogController {
 
 	@Autowired
@@ -31,7 +32,7 @@ public class BacklogController {
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
 	
-	@PostMapping("/backlog/{backlog_id}")
+	@PostMapping("/{backlog_id}")
 	private ResponseEntity<?> addProjectTaskToBacklog(@Valid @RequestBody ProjectTask projectTask, BindingResult bindingResult, @PathVariable String backlog_id){
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
@@ -51,7 +52,7 @@ public class BacklogController {
 //	
 //	}
 	
-	@GetMapping("/backlog/{backlog_id}/{projectSequence}")
+	@GetMapping("/{backlog_id}/{projectSequence}")
 	private ResponseEntity<?> getProjectTaskByProjectSequence(@PathVariable String projectSequence, @PathVariable String backlog_id){
 		
 		ProjectTask projectTask = projectTaskService.getSingleProjectTask(projectSequence, backlog_id);
@@ -59,17 +60,29 @@ public class BacklogController {
 		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
 	}
 	
-	@GetMapping("/backlog/{backlog_id}")
+	@GetMapping("/{backlog_id}")
 	private Iterable<ProjectTask> getProjectTask(@PathVariable String backlog_id){
 				
 		return projectTaskService.getProjectTasksById(backlog_id);
+	}
+	
+	@PatchMapping("/{backlog_id}/{projectSequence}")
+	private ResponseEntity<?> updateProjectTaskByProjectSequence(@Valid @RequestBody ProjectTask updatedProjectTask, @PathVariable String backlog_id, 
+			@PathVariable String projectSequence, BindingResult bindingResult) {
+		
+		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
+		if(errorMap != null) return errorMap;
+		
+		ProjectTask projectTask = projectTaskService.updateProjectTask(updatedProjectTask, backlog_id, projectSequence);
+		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
+	
 	}
 
 	@DeleteMapping("/{pt_id}")
 	private ResponseEntity<?> deleteProjectTask(@PathVariable Long pt_id) {
 		
-		projectTaskService.deleteProjectTaskById(pt_id);
 		
+		projectTaskService.deleteProjectTaskById(pt_id);
 		return new ResponseEntity<String>("Project Task is deleted.",HttpStatus.OK);
 	}
 }

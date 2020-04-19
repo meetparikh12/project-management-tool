@@ -13,6 +13,11 @@ import com.meet.projectboard.repository.BacklogRepository;
 import com.meet.projectboard.repository.ProjectRepository;
 import com.meet.projectboard.repository.ProjectTaskRepository;
 
+/**
+ * Service layer for Project Task
+ * @author MEET
+ *
+ */
 @Service
 public class ProjectTaskService {
 
@@ -32,6 +37,12 @@ public class ProjectTaskService {
 //		return projectTask;
 //	}
 
+	/**
+	 * Method for adding project task to backlog
+	 * @param projectIdentifier
+	 * @param projectTask
+	 * @return
+	 */
 	public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
 		
 		try {
@@ -71,6 +82,11 @@ public class ProjectTaskService {
 //		return projectTaskRepository.findAll();
 //	}
 
+	/**
+	 * Method for fetching all project Tasks for defined project-id
+	 * @param projectIdentifier
+	 * @return
+	 */
 	public Iterable<ProjectTask> getProjectTasksById(String projectIdentifier) {
 		
 		Project project = projectRepository.getByProjectIdentifier(projectIdentifier.toUpperCase());
@@ -87,6 +103,12 @@ public class ProjectTaskService {
 		projectTaskRepository.deleteById(id);
 	}
 
+	/**
+	 * Method for fetching single project task using project sequence
+	 * @param projectSequence
+	 * @param backlog_id
+	 * @return
+	 */
 	public ProjectTask getSingleProjectTask(String projectSequence, String backlog_id) {
 		
 		Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
@@ -110,6 +132,14 @@ public class ProjectTaskService {
 		}
 		
 		return projectTask;
+	}
+	
+	public ProjectTask updateProjectTask(ProjectTask updatedProjectTask, String projectIdentifier, String projectSequence) {
+		
+		ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectSequence);
+		projectTask = updatedProjectTask;
+		return projectTaskRepository.save(projectTask);
+		
 	}
 	
 }
