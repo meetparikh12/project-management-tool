@@ -134,9 +134,9 @@ public class ProjectTaskService {
 		return projectTask;
 	}
 	
-	public ProjectTask updateProjectTask(ProjectTask updatedProjectTask, String projectIdentifier, String projectSequence) {
+	public ProjectTask updateProjectTask(ProjectTask updatedProjectTask, String backlog_id, String projectSequence) {
 		
-		ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectSequence);
+		ProjectTask projectTask = getSingleProjectTask(projectSequence, backlog_id);
 		projectTask = updatedProjectTask;
 		return projectTaskRepository.save(projectTask);
 		
