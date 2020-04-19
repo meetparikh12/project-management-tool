@@ -78,11 +78,11 @@ public class BacklogController {
 	
 	}
 
-	@DeleteMapping("/{pt_id}")
-	private ResponseEntity<?> deleteProjectTask(@PathVariable Long pt_id) {
+	@DeleteMapping("/{backlog_id}/{projectSequence}")
+	private ResponseEntity<?> deleteProjectTask(@PathVariable String projectSequence, @PathVariable String backlog_id) {
 		
+		projectTaskService.deleteProjectTaskById(projectSequence, backlog_id);
+		return new ResponseEntity<String>("Project Task '" +projectSequence +"' is deleted.",HttpStatus.OK);
 		
-		projectTaskService.deleteProjectTaskById(pt_id);
-		return new ResponseEntity<String>("Project Task is deleted.",HttpStatus.OK);
 	}
 }

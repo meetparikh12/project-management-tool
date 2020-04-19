@@ -98,9 +98,10 @@ public class ProjectTaskService {
 		return projectTaskRepository.findByProjectIdentifierOrderByPriority(projectIdentifier);
 	}
 
-	public void deleteProjectTaskById(Long id) {
+	public void deleteProjectTaskById(String projectSequence, String backlog_id) {
 		
-		projectTaskRepository.deleteById(id);
+		ProjectTask projectTask = getSingleProjectTask(projectSequence, backlog_id);
+		projectTaskRepository.delete(projectTask);
 	}
 
 	/**
