@@ -10,8 +10,8 @@ import com.meet.projectboard.model.ProjectTask;
 @Repository
 public interface ProjectTaskRepository extends JpaRepository<ProjectTask, Long> {
 	
-	ProjectTask getById(Long id);
+	ProjectTask findByProjectSequence(String projectSequence);
 	
 	List<ProjectTask> findByProjectIdentifierOrderByPriority(String projectIdentifier);
-
+	
 }

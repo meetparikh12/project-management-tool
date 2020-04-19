@@ -1,6 +1,5 @@
 package com.meet.projectboard.service;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,12 +65,12 @@ public class ProjectTaskService {
 		
 	}
 	
-	public List<ProjectTask> getAllProjectTasks() {
-		
-		return projectTaskRepository.findAll();
-	}
+//	public List<ProjectTask> getAllProjectTasks() {
+//		
+//		return projectTaskRepository.findAll();
+//	}
 
-	public Iterable<ProjectTask> getProjectTaskById(String projectIdentifier) {
+	public Iterable<ProjectTask> getProjectTasksById(String projectIdentifier) {
 		
 		Project project = projectRepository.getByProjectIdentifier(projectIdentifier.toUpperCase());
 		
@@ -85,6 +84,12 @@ public class ProjectTaskService {
 	public void deleteProjectTaskById(Long id) {
 		
 		projectTaskRepository.deleteById(id);
+	}
+
+	public ProjectTask getSingleProjectTask(String projectSequence) {
+		
+		return projectTaskRepository.findByProjectSequence(projectSequence);
+		
 	}
 	
 }

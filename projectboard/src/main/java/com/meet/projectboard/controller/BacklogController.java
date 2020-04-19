@@ -1,6 +1,5 @@
 package com.meet.projectboard.controller;
 
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -44,18 +43,26 @@ public class BacklogController {
 		return new ResponseEntity<ProjectTask>(newProjectTask,HttpStatus.CREATED);
 	}
 	
-	@GetMapping("")
-	private ResponseEntity<?> getAllProjectTasks(){
-		
-		List<ProjectTask> listOfProjectTasks = projectTaskService.getAllProjectTasks();
-		return new ResponseEntity<List<ProjectTask>>(listOfProjectTasks,HttpStatus.OK);
+//	@GetMapping("")
+//	private ResponseEntity<?> getAllProjectTasks(){
+//		
+//		List<ProjectTask> listOfProjectTasks = projectTaskService.getAllProjectTasks();
+//		return new ResponseEntity<List<ProjectTask>>(listOfProjectTasks,HttpStatus.OK);
+//	
+//	}
 	
+	@GetMapping("/backlog/projectTask/{projectSequence}")
+	private ResponseEntity<?> getProjectTaskByProjectSequence(@PathVariable String projectSequence){
+		
+		ProjectTask projectTask = projectTaskService.getSingleProjectTask(projectSequence);
+		
+		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
 	}
 	
-	@GetMapping("/backlog/{backlog_id}")
+	@GetMapping("/backlog/projectTasks/{backlog_id}")
 	private Iterable<ProjectTask> getProjectTask(@PathVariable String backlog_id){
 				
-		return projectTaskService.getProjectTaskById(backlog_id);
+		return projectTaskService.getProjectTasksById(backlog_id);
 	}
 
 	@DeleteMapping("/{pt_id}")
