@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meet.projectboard.exceptions.ProjectNotFoundException;
+import com.meet.projectboard.exceptions.ProjectTaskNotFoundException;
 import com.meet.projectboard.model.Backlog;
 import com.meet.projectboard.model.Project;
 import com.meet.projectboard.model.ProjectTask;
@@ -86,10 +87,29 @@ public class ProjectTaskService {
 		projectTaskRepository.deleteById(id);
 	}
 
-	public ProjectTask getSingleProjectTask(String projectSequence) {
+	public ProjectTask getSingleProjectTask(String projectSequence, String backlog_id) {
 		
-		return projectTaskRepository.findByProjectSequence(projectSequence);
+		Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
 		
+		if(backlog == null) {
+
+			throw new ProjectNotFoundException("Project with ID '" +backlog_id +"' does not exist.");
+
+		}
+		ProjectTask projectTask = projectTaskRepository.findByProjectSequence(projectSequence);
+		
+		if(projectTask == null) {
+			
+			throw new ProjectTaskNotFoundException("Project Task with sequence '" +projectSequence +"' not found.");
+		}
+		
+		if(!projectTask.getProjectIdentifier().equals(backlog_id)) {
+
+			throw new ProjectTaskNotFoundException("Project Task '" +projectSequence +"' does not exist in Project '" +backlog_id +"'");
+
+		}
+		
+		return projectTask;
 	}
 	
 }
