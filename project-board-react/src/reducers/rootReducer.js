@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
 import { errorReducer } from './errorReducer';
-import projectTaskReducer from './projectTaskReducer';
 import projectReducer from './projectReducer';
+import backlogReducer from './backlogReducer';
 
 const rootReducer = combineReducers({
-    getProjectTaskReducer : projectTaskReducer,
+    getBacklogReducer : backlogReducer,
     getErrorReducer: errorReducer,
     getProjectReducer: projectReducer
 })

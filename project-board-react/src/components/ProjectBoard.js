@@ -15,7 +15,7 @@ class ProjectBoard extends Component {
     }
 
     componentDidMount(){
-        axios.get("/api/projectboard")
+        axios.get(`/api/backlog/${this.props.match.params.projectId}`)
         .then((res) => {
             this.props.getProjectTasks(res.data);
         })
@@ -33,7 +33,7 @@ class ProjectBoard extends Component {
     }
 
     render() {    
-        
+        const { projectId } = this.props.match.params;
         let ProjectBoardContent;
         let todoItems = [];
         let inProgressItems = [];
@@ -123,7 +123,7 @@ class ProjectBoard extends Component {
                  
                   <div className="container">
                     
-                    <Link to="/projectboard/addProjectTask" className="btn btn-primary mb-3">
+                    <Link to={`/addProjectTask/${projectId}`} className="btn btn-primary mb-3">
                         <i className="fas fa-plus-circle"> Create Project Task</i>
                     
                     </Link>
@@ -147,7 +147,7 @@ ProjectBoard.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        projectTasks :  state.getProjectTaskReducer.projectTasks
+        projectTasks :  state.getBacklogReducer.projectTasks
     }
 }
 

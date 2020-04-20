@@ -5,7 +5,7 @@ const initialState = {
     currentTask: null
 }
 
-const projectTaskReducer = (state = initialState, action) => {
+const backlogReducer = (state = initialState, action) => {
     switch(action.type){
         case actionTypes.GET_PROJECT_TASKS: 
            
@@ -40,4 +40,4 @@ const projectTaskReducer = (state = initialState, action) => {
 
 }
 
-export default projectTaskReducer;
+export default backlogReducer;
