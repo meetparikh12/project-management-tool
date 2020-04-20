@@ -113,7 +113,7 @@ AddProjectTask.propTypes = {
 }
 const mapStateToProps = state => {
     return {
-        errors: state.getErrorReducer
+        errors: state.getErrorReducer.project_task_error
     }
 }
 
