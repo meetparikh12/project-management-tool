@@ -37,21 +37,27 @@ class ProjectTaskItem extends Component {
 
     render() {
         const { project_task } = this.props;
-        
-        let priorityLevel = "LOW";
-        if(project_task.priority === 1){
-            priorityLevel = "HIGH"
-        } else if(project_task.priority === 2){
-            priorityLevel = "MEDIUM"
-        } else {
-            priorityLevel = "LOW"
+        let priorityLevel;
+        let priorityClass;
+
+        if(project_task.priority === 1) {
+            priorityLevel = "HIGH";
+            priorityClass = "bg-danger text-light";
+        } 
+        else if (project_task.priority === 2) {
+            priorityLevel = "MEDIUM";
+            priorityClass = "bg-warning text-light";
+        } 
+        else {
+            priorityLevel = "LOW";
+            priorityClass = "bg-info text-light";
         }
 
         return (
             <div className="ProjectTaskItem">
                 <div className="card mb-1 bg-light">
 
-                    <div className="card-header text-primary">
+                    <div className={`card-header text-primary ${priorityClass}`}>
                             ID: {project_task.projectSequence} -- Priority: {priorityLevel}
                     </div>
                     
