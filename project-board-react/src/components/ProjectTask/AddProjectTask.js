@@ -8,9 +8,13 @@ import classnames from 'classnames';
 class AddProjectTask extends Component {
     constructor(props){
         super(props);
+        const { projectId } = this.props.match.params;
         this.state = {
+            projectIdentifier: projectId,
             summary: "",
             acceptanceCriteria: "",
+            dueDate: "",
+            priority: 0,
             status: "",
             errors: {}
         }
@@ -38,12 +42,16 @@ class AddProjectTask extends Component {
         const projectTask = {
             "summary": this.state.summary,
             "acceptanceCriteria": this.state.acceptanceCriteria,
-            "status": this.state.status
+            "dueDate": this.state.dueDate,
+            "priority": this.state.priority,
+            "status": this.state.status,
+
         }
-        this.props.addProjectTask(projectTask,this.props.history);
+        this.props.addProjectTask(projectTask,this.props.history,this.state.projectIdentifier);
     }
     render() {
         const {errors} = this.state;
+        const { projectId } = this.props.match.params;
         return (
             
             <div className="AddProjectTask">
@@ -51,7 +59,7 @@ class AddProjectTask extends Component {
                     <div className="row">
                         <div className="col-md-8 m-auto">
                             
-                            <Link to={`/projectboard/${this.props.match.params.projectId}`} className="btn btn-light">Back to Board</Link>
+                            <Link to={`/projectboard/${projectId}`} className="btn btn-light">Back to Board</Link>
                             <h4 className="display-4 text-center">Add / Update Project Task</h4>
                             <p class="lead text-center">Project Name + Project Code</p>
                             <form onSubmit={this.onSubmitForm}>
@@ -68,10 +76,10 @@ class AddProjectTask extends Component {
                                 </div>
                                 <h6>Due Date</h6>
                                 <div className="form-group">
-                                    <input type="date" className="form-control form-control-lg" name="dueDate" />
+                                    <input type="date" className="form-control form-control-lg" name="dueDate" onChange={this.onChange} value={this.state.dueDate} />
                                 </div>
                                 <div className="form-group">
-                                    <select className="form-control form-control-lg" name="priority">
+                                    <select className="form-control form-control-lg" onChange={this.onChange} value={this.state.priority} name="priority">
                                         <option value={0}>Select Priority</option>
                                         <option value={1}>High</option>
                                         <option value={2}>Medium</option>
@@ -112,10 +120,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatchEvent => {
     return {
 
-        addProjectTask: (projectTask,history) => {
-            axios.post("/api/projectboard",projectTask)
+        addProjectTask: (projectTask,history,backlog_id) => {
+            axios.post(`/api/backlog/${backlog_id}`, projectTask)
             .then((res) => {
-                history.push("/projectboard");
+                history.push(`/projectboard/${backlog_id}`);
                 dispatchEvent(
                     addProjectTask({})
                 )
