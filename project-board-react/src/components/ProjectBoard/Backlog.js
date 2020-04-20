@@ -4,24 +4,21 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import {getProjectTasks} from '../../actions/actions';
 import PropTypes from 'prop-types';
+import { GET_ERRORS } from '../../actions/actionTypes';
 
 class Backlog extends Component {
     
     constructor(props){
         super(props);
         this.state = {
-            project_tasks: []
+            project_tasks: [],
+            errors: {}
         }
     }
 
     componentDidMount(){
-        axios.get(`/api/backlog/${this.props.backlog_id}`)
-        .then((res) => {
-            this.props.getProjectTasks(res.data);
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+
+        this.props.getProjectTasks(this.props.backlog_id)
     }
 
     componentWillReceiveProps(nextProps){
@@ -30,9 +27,16 @@ class Backlog extends Component {
                 project_tasks: nextProps.projectTasks
             })
         }
+        if(nextProps.errors){
+            this.setState({
+                errors: nextProps.errors
+            })
+
+        }
     }
 
     render() {    
+        const { errors } = this.state;
         let ProjectBoardContent;
         let todoItems = [];
         let inProgressItems = [];
@@ -41,11 +45,16 @@ class Backlog extends Component {
         const projectBoardAlgo = (projectTasks) => {
             
             if(projectTasks.length < 1) {
-                return (
-                <div className="alert alert-info text-center" role="alert">No project tasks to be displayed.</div>
-                )
-            }
-            else {
+                if(errors.projectNotFound) {
+                    return (
+                        <div className="alert alert-danger text-center" role="alert">{errors.projectNotFound}</div>
+                    );
+                } else {
+                    return (
+                        <div className="alert alert-info text-center" role="alert"> No project tasks to be displayed.</div>
+                    );
+                }
+            } else {
                 const tasks = projectTasks.map((projectTask) => 
                     
                     <ProjectTaskItem key={projectTask.id} project_task = {projectTask} />
@@ -121,14 +130,26 @@ Backlog.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        projectTasks :  state.getBacklogReducer.projectTasks
+        projectTasks :  state.getBacklogReducer.projectTasks,
+        errors: state.getErrorReducer.project_task_error
     }
 }
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        getProjectTasks : (projectTasks) => dispatchEvent(getProjectTasks(projectTasks))
+        getProjectTasks : (backlog_id) => {
+            axios.get(`/api/backlog/${backlog_id}`)
+                .then((res) => {
+                    dispatchEvent(getProjectTasks((res.data)));
+                })
+                .catch((error) => {
+                    console.log(error)
+                    dispatchEvent({
+                        type: GET_ERRORS,
+                        payload: error.response.data
+                    })
+                })
+        }
     }
 }
-
 export default connect(mapStateToProps,mapDispatchToProps)(Backlog);

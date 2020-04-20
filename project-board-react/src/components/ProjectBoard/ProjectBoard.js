@@ -10,8 +10,8 @@ const ProjectBoard = (props) => {
                 <Link to={`/addProjectTask/${projectId}`} className="btn btn-primary mb-3">
                     <i className="fas fa-plus-circle"> Create Project Task</i>
                 </Link>
-                <br />
-                <hr />
+                <br/>
+                <hr/>
                 <Backlog backlog_id = {projectId} />                
                 </div>
         </div>
