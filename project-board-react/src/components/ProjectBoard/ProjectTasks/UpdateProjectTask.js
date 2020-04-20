@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import axios from 'axios';
 import PropTypes from "prop-types";
-import { addProjectTask } from '../../actions/actions';
+import { addProjectTask } from '../../../actions/actions';
 
 class UpdateProjectTask extends Component {
 

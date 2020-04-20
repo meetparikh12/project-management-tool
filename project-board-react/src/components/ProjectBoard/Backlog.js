@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
-import ProjectTaskItem from './ProjectTask/ProjectTaskItem';
+import ProjectTaskItem from './ProjectTasks/ProjectTaskItem';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import {getProjectTasks} from '../actions/actions';
+import {getProjectTasks} from '../../actions/actions';
 import PropTypes from 'prop-types';
 
-class ProjectBoard extends Component {
+class Backlog extends Component {
+    
     constructor(props){
         super(props);
         this.state = {
@@ -15,7 +15,7 @@ class ProjectBoard extends Component {
     }
 
     componentDidMount(){
-        axios.get(`/api/backlog/${this.props.match.params.projectId}`)
+        axios.get(`/api/backlog/${this.props.backlog_id}`)
         .then((res) => {
             this.props.getProjectTasks(res.data);
         })
@@ -33,7 +33,6 @@ class ProjectBoard extends Component {
     }
 
     render() {    
-        const { projectId } = this.props.match.params;
         let ProjectBoardContent;
         let todoItems = [];
         let inProgressItems = [];
@@ -68,35 +67,26 @@ class ProjectBoard extends Component {
                 return (
                     <React.Fragment>
 
-                        <div className="container">
-                             
+                        <div className="container">       
                             <div className="row">
-
                                 <div className="col-md-4">
-                                    
-                                    {/* <!-- SAMPLE PROJECT TASK STARTS HERE --> */ }
-                                    
+                                    {/* <!-- SAMPLE PROJECT TASK STARTS HERE --> */ }                                    
                                     <div className="card text-center mb-2">
                                         <div className="card-header bg-secondary text-white">
                                             <h3>TO DO</h3>
                                         </div>
                                     </div>
-
                                     {todoItems}
-
                                     {/* <!-- SAMPLE PROJECT TASK ENDS HERE --> */}
                                 </div>
 
                                 <div className="col-md-4">
-
                                     <div className="card text-center mb-2">
                                         <div className="card-header bg-primary text-white">
                                             <h3>In Progress</h3>
                                         </div>
                                     </div>
-
                                     {inProgressItems}
-
                                 </div>
                             
                                 <div className="col-md-4">
@@ -105,9 +95,7 @@ class ProjectBoard extends Component {
                                             <h3>Done</h3>
                                         </div>
                                     </div>
-
                                     {doneItems}
-                                    
                                 </div>
                             </div>
                         </div>
@@ -119,28 +107,14 @@ class ProjectBoard extends Component {
         ProjectBoardContent = projectBoardAlgo(this.state.project_tasks);
         
         return (
-            <div className="ProjectBoard">
-                 
-                  <div className="container">
-                    
-                    <Link to={`/addProjectTask/${projectId}`} className="btn btn-primary mb-3">
-                        <i className="fas fa-plus-circle"> Create Project Task</i>
-                    
-                    </Link>
-
-                    <br />
-                    <hr />
-                    {ProjectBoardContent}
-                
-                  </div>
-
-                  
+            <div className="Backlog">
+                {ProjectBoardContent}                
             </div>
         )
     }
 }
 
-ProjectBoard.propTypes = {
+Backlog.propTypes = {
     getProjectTasks : PropTypes.func.isRequired,
     projecTasks: PropTypes.object.isRequired
 }
@@ -157,4 +131,4 @@ const mapDispatchToProps = dispatchEvent => {
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(ProjectBoard);
+export default connect(mapStateToProps,mapDispatchToProps)(Backlog);

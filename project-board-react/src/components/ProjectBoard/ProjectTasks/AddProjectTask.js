@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
-import { addProjectTask } from "../../actions/actions";
+import { addProjectTask } from "../../../actions/actions";
 import classnames from 'classnames';
 class AddProjectTask extends Component {
     constructor(props){
