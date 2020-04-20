@@ -41,7 +41,7 @@ class ProjectTaskItem extends Component {
             <div className="ProjectTaskItem">
                 <div className="card mb-1 bg-light">
 
-                    <div class="card-header text-primary">
+                    <div className="card-header text-primary">
                             ID: {project_task.projectSequence} -- Priority: priorityString
                     </div>
                     

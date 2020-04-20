@@ -67,11 +67,11 @@ class AddProjectTask extends Component {
                                     value={this.state.acceptanceCriteria} name="acceptanceCriteria" onChange={this.onChange}></textarea>
                                 </div>
                                 <h6>Due Date</h6>
-                                <div class="form-group">
-                                    <input type="date" class="form-control form-control-lg" name="dueDate" />
+                                <div className="form-group">
+                                    <input type="date" className="form-control form-control-lg" name="dueDate" />
                                 </div>
-                                <div class="form-group">
-                                    <select class="form-control form-control-lg" name="priority">
+                                <div className="form-group">
+                                    <select className="form-control form-control-lg" name="priority">
                                         <option value={0}>Select Priority</option>
                                         <option value={1}>High</option>
                                         <option value={2}>Medium</option>
