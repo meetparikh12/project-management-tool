@@ -53,6 +53,7 @@ class AddProjectTask extends Component {
                             
                             <Link to={`/projectboard/${this.props.match.params.projectId}`} className="btn btn-light">Back to Board</Link>
                             <h4 className="display-4 text-center">Add / Update Project Task</h4>
+                            <p class="lead text-center">Project Name + Project Code</p>
                             <form onSubmit={this.onSubmitForm}>
                                 <div className="form-group">
                                     <input type="text" className={classnames("form-control form-control-lg",{
@@ -64,6 +65,18 @@ class AddProjectTask extends Component {
                                 <div className="form-group">
                                     <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" 
                                     value={this.state.acceptanceCriteria} name="acceptanceCriteria" onChange={this.onChange}></textarea>
+                                </div>
+                                <h6>Due Date</h6>
+                                <div class="form-group">
+                                    <input type="date" class="form-control form-control-lg" name="dueDate" />
+                                </div>
+                                <div class="form-group">
+                                    <select class="form-control form-control-lg" name="priority">
+                                        <option value={0}>Select Priority</option>
+                                        <option value={1}>High</option>
+                                        <option value={2}>Medium</option>
+                                        <option value={3}>Low</option>
+                                    </select>
                                 </div>
                                 <div className="form-group">
                                     <select className="form-control form-control-lg" value={this.state.status} onChange={this.onChange} 
