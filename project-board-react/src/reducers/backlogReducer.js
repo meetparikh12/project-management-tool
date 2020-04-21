@@ -15,16 +15,17 @@ const backlogReducer = (state = initialState, action) => {
 
         case actionTypes.DELETE_PROJECT_TASK:
 
-            let updatedArray = [...state.projectTasks];
-
-            for(let i=0; i<updatedArray.length; i++){
-                if(updatedArray[i].id === action.payload){
-                    updatedArray.splice(updatedArray.indexOf(updatedArray[i]), 1);
-                }
-            }
-
-            return {    
-                projectTasks: updatedArray
+            //let updatedArray = [...state.projectTasks]; 
+            //before: action.payload contained id as property
+            // for(let i=0; i<updatedArray.length; i++){
+            //     if(updatedArray[i].id === action.payload){
+            //         updatedArray.splice(updatedArray.indexOf(updatedArray[i]), 1);
+            //     }
+            // }
+            return {
+                ...state,    
+                projectTasks: state.projectTasks.filter((projectTask) => 
+                                projectTask.projectSequence !== action.payload)
             }
 
         case actionTypes.GET_PROJECT_TASK:

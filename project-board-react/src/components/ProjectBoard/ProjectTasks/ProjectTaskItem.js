@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { deleteProjectTask } from '../../../actions/actions';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
-import {getProjectTask} from '../../../actions/actions';
 import  PropTypes  from "prop-types";
 
 class ProjectTaskItem extends Component {
@@ -11,23 +10,23 @@ class ProjectTaskItem extends Component {
     constructor(props) {
         super(props);
         this.deleteProjectTask = this.deleteProjectTask.bind(this);
-        this.getProjectTask = this.getProjectTask.bind(this);
+   //     this.getProjectTask = this.getProjectTask.bind(this);
     }
 
-    getProjectTask(backlog_id,projectSequence){
+    // getProjectTask(backlog_id,projectSequence){
 
-        axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
-        .then((res) => this.props.getProjectTask(res.data))
-        .catch((error) => console.log(error))
+    //     axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
+    //     .then((res) => this.props.getProjectTask(res.data))
+    //     .catch((error) => console.log(error))
 
-    }
-    deleteProjectTask(id){
+    // }
+    deleteProjectTask(backlog_id, projectSequence) {
 
-        if(window.confirm(`You are deleting Project Task ${id} , this action cannot be undone.`))
+        if(window.confirm(`You are deleting Project Task ${projectSequence} , this action cannot be undone.`))
         {
-            axios.delete(`/api/projectboard/${id}`)
+            axios.delete(`/api/backlog/${backlog_id}/${projectSequence}`)
             .then((res) => {
-                this.props.deleteProjectTask(id);
+                this.props.deleteProjectTask(projectSequence);
             })
             .catch((error) => console.log(error));
         }
@@ -67,11 +66,11 @@ class ProjectTaskItem extends Component {
                             {project_task.acceptanceCriteria}
                         </p>
                         <Link to={`/updateProjectTask/${project_task.projectIdentifier}/${project_task.projectSequence}`} 
-                        className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.projectIdentifier,project_task.projectSequence)}>
+                        className="btn btn-primary">
                             View / Update
                         </Link>
 
-                        <button onClick = {() => this.deleteProjectTask(project_task.id)} className="btn btn-danger ml-4">
+                        <button onClick = {() => this.deleteProjectTask(project_task.projectIdentifier,project_task.projectSequence)} className="btn btn-danger ml-4">
                             Delete
                         </button>
                     </div>
@@ -85,14 +84,11 @@ class ProjectTaskItem extends Component {
 ProjectTaskItem.propTypes = {
 
     deleteProjectTask : PropTypes.func.isRequired,
-    getProjectTask : PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        deleteProjectTask : (id) => dispatchEvent(deleteProjectTask(id)),
-        getProjectTask : (projectTask) => dispatchEvent(getProjectTask(projectTask))
-        }
+        deleteProjectTask : (projectSequence) => dispatchEvent(deleteProjectTask(projectSequence))
     }
-
+}
 export default connect(null,mapDispatchToProps)(ProjectTaskItem);

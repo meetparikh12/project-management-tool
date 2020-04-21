@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import axios from 'axios';
 import PropTypes from "prop-types";
-import { addProjectTask } from '../../../actions/actions';
+import { addProjectTask, getProjectTask } from '../../../actions/actions';
 
 class UpdateProjectTask extends Component {
 
@@ -25,6 +25,11 @@ class UpdateProjectTask extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
+    componentDidMount(){
+        const { backlog_id, projectSequence } = this.props.match.params;
+        this.props.getProjectTask(backlog_id,projectSequence, this.props.history);
+        
+    }
     componentWillReceiveProps(nextProps){
         
         if(nextProps.currentTask){
@@ -136,7 +141,9 @@ UpdateProjectTask.propTypes = {
 
     updateProjectTask: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
-    currentTask : PropTypes.func.isRequired
+    currentTask : PropTypes.func.isRequired,
+    getProjectTask: PropTypes.func.isRequired
+
 }
 
 const mapStateToProps = state => {
@@ -158,7 +165,12 @@ const mapDispatchToProps = dispatchEvent => {
                     console.log(error);
                     dispatchEvent(addProjectTask(error.response.data));
                 })
-        }
+        },
+        getProjectTask: (backlog_id, projectSequence, history) => {
+              axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
+                  .then((res) => dispatchEvent(getProjectTask(res.data)))
+                  .catch((error) => history.push("/"))
+          }
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(UpdateProjectTask);
