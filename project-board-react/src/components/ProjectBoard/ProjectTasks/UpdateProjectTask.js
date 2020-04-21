@@ -80,11 +80,13 @@ class UpdateProjectTask extends Component {
                         <div className="col-md-8 m-auto">
                             
                             <Link 
-                            to="/projectboard" className="btn btn-light">
+                            to={`/projectboard/${this.state.projectIdentifier}`} className="btn btn-light">
                                 Back to Board
                             </Link>
                             
                             <h4 className="display-4 text-center">Add / Update Project Task</h4>
+                            <p class="lead text-center"><b>Project ID: </b>{this.state.projectIdentifier} | <b>Project Task ID: </b>
+                            {this.state.projectSequence} </p>
                             <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
                                     <input type="text" className={classnames("form-control form-control-lg",{
