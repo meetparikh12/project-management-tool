@@ -1,12 +1,16 @@
 package com.meet.projectboard.controller;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -67,12 +71,13 @@ public class BacklogController {
 	}
 	
 	@PatchMapping("/{backlog_id}/{projectSequence}")
-	private ResponseEntity<?> updateProjectTaskByProjectSequence(@Valid @RequestBody ProjectTask updatedProjectTask, @PathVariable String backlog_id, 
-			@PathVariable String projectSequence, BindingResult bindingResult) {
+	private ResponseEntity<?> updateProjectTaskByProjectSequence(@Valid @RequestBody ProjectTask updatedProjectTask, BindingResult bindingResult, @PathVariable String backlog_id, 
+			@PathVariable String projectSequence) {
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
-		if(errorMap != null) return errorMap;
-		
+		if(errorMap != null) {
+			return errorMap;
+		}
 		ProjectTask projectTask = projectTaskService.updateProjectTask(updatedProjectTask, backlog_id, projectSequence);
 		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
 	
