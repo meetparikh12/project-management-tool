@@ -10,12 +10,17 @@ class UpdateProjectTask extends Component {
 
     constructor(props){
         super(props);
+        const { projectId } = this.props.match.params;
+
         this.state = {
-            errors: {},
-            summary: '',
-            acceptanceCriteria: '',
-            status:'',
-            id: 0
+            projectIdentifier: projectId,
+            summary: "",
+            acceptanceCriteria: "",
+            dueDate: "",
+            priority: 0,
+            status: "",
+            id: 0,
+            errors: {}
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -115,7 +120,7 @@ UpdateProjectTask.propTypes = {
 const mapStateToProps = state => {
     
     return {
-        currentTask: state.getProjectTaskReducer.currentTask,
+        currentTask: state.getBacklogReducer.currentTask,
         errors: state.getErrorReducer.project_task_error
     }
 }

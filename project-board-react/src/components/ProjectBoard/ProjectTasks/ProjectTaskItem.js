@@ -14,9 +14,9 @@ class ProjectTaskItem extends Component {
         this.getProjectTask = this.getProjectTask.bind(this);
     }
 
-    getProjectTask(id){
+    getProjectTask(backlog_id,projectSequence){
 
-        axios.get(`/api/projectboard/${id}`)
+        axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
         .then((res) => this.props.getProjectTask(res.data))
         .catch((error) => console.log(error))
 
@@ -66,7 +66,8 @@ class ProjectTaskItem extends Component {
                         <p className="card-text text-truncate ">
                             {project_task.acceptanceCriteria}
                         </p>
-                        <Link to={`/projectboard/updateProjectTask/${project_task.id}`} className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.id)}>
+                        <Link to={`/updateProjectTask/${project_task.projectIdentifier}/${project_task.projectSequence}`} 
+                        className="btn btn-primary" onClick = {() => this.getProjectTask(project_task.projectIdentifier,project_task.projectSequence)}>
                             View / Update
                         </Link>
 
