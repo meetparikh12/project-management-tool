@@ -12,6 +12,7 @@ class UpdateProjectTask extends Component {
         super(props);
         this.state = {
             projectIdentifier: "",
+            projectSequence:"",
             summary: "",
             acceptanceCriteria: "",
             dueDate: "",
@@ -34,7 +35,8 @@ class UpdateProjectTask extends Component {
             acceptanceCriteria: nextProps.currentTask.acceptanceCriteria,
             dueDate: nextProps.currentTask.dueDate,
             priority: nextProps.currentTask.priority,
-            status: nextProps.currentTask.status
+            status: nextProps.currentTask.status,
+            projectSequence: nextProps.currentTask.projectSequence
             })
         }
         if(nextProps.errors){
@@ -50,6 +52,10 @@ class UpdateProjectTask extends Component {
             "id": this.state.id,
             "summary": this.state.summary,
             "acceptanceCriteria": this.state.acceptanceCriteria,
+            "projectIdentifier":this.state.projectIdentifier,
+            "projectSequence": this.state.projectSequence,
+            "dueDate": this.state.dueDate,
+            "priority": this.state.priority,
             "status": this.state.status
         }
 
@@ -141,9 +147,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatchEvent => {
     return {
         updateProjectTask : (projectTask, history) => {
-            axios.post("/api/projectboard", projectTask)
+            axios.patch(`/api/backlog/${projectTask.projectIdentifier}/${projectTask.projectSequence}`, projectTask)
                 .then((res) => {
-                    history.push("/projectboard");
+                    history.push(`/projectboard/${projectTask.projectIdentifier}`);
                     dispatchEvent(addProjectTask({}));
                 })
                 .catch((error) => {
