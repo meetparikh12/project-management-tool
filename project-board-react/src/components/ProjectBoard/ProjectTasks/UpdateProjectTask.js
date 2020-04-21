@@ -10,10 +10,8 @@ class UpdateProjectTask extends Component {
 
     constructor(props){
         super(props);
-        const { projectId } = this.props.match.params;
-
         this.state = {
-            projectIdentifier: projectId,
+            projectIdentifier: "",
             summary: "",
             acceptanceCriteria: "",
             dueDate: "",
@@ -26,13 +24,16 @@ class UpdateProjectTask extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps){
         
         if(nextProps.currentTask){
         this.setState({
             id: nextProps.currentTask.id,
+            projectIdentifier: nextProps.currentTask.projectIdentifier,
             summary: nextProps.currentTask.summary,
             acceptanceCriteria: nextProps.currentTask.acceptanceCriteria,
+            dueDate: nextProps.currentTask.dueDate,
+            priority: nextProps.currentTask.priority,
             status: nextProps.currentTask.status
             })
         }
@@ -91,6 +92,19 @@ class UpdateProjectTask extends Component {
                                     <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" 
                                     name="acceptanceCriteria" onChange={this.onChange} value = {this.state.acceptanceCriteria}></textarea>
                                 </div>
+                                <h6>Due Date</h6>
+                                <div className="form-group">
+                                    <input type="date" className="form-control form-control-lg" name="dueDate" onChange={this.onChange} value={this.state.dueDate} />
+                                </div>
+                                <div className="form-group">
+                                    <select className="form-control form-control-lg" onChange={this.onChange} value={this.state.priority} name="priority">
+                                        <option value={0}>Select Priority</option>
+                                        <option value={1}>High</option>
+                                        <option value={2}>Medium</option>
+                                        <option value={3}>Low</option>
+                                    </select>
+                                </div>
+                                
                                 <div className="form-group">
                                     <select className="form-control form-control-lg" onChange={this.onChange} name="status" 
                                     value = {this.state.status}>
