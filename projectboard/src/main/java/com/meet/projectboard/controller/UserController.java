@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.meet.projectboard.model.User;
 import com.meet.projectboard.service.MapValidationErrorService;
 import com.meet.projectboard.service.UserService;
+import com.meet.projectboard.validators.UserValidator;
 
 @RestController
 @CrossOrigin
@@ -24,11 +25,15 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired 
+	private UserValidator userValidator;
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
 	
 	@PostMapping("/register")
 	private ResponseEntity<?> addNewUser(@Valid @RequestBody User newUser, BindingResult bindingResult) {
+		
+		userValidator.validate(newUser, bindingResult);
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
 		if(errorMap != null) return errorMap;
