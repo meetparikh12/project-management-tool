@@ -1,8 +1,7 @@
 package com.meet.projectboard.controller;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.security.Principal;
 
 import javax.validation.Valid;
 
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +35,13 @@ public class BacklogController {
 	private MapValidationErrorService mapValidationErrorService;
 	
 	@PostMapping("/{backlog_id}")
-	private ResponseEntity<?> addProjectTaskToBacklog(@Valid @RequestBody ProjectTask projectTask, BindingResult bindingResult, @PathVariable String backlog_id){
+	private ResponseEntity<?> addProjectTaskToBacklog(@Valid @RequestBody ProjectTask projectTask, BindingResult bindingResult, @PathVariable String backlog_id, Principal principal){
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
 		if(errorMap != null) return errorMap;
 		
 		
-		ProjectTask newProjectTask = projectTaskService.addProjectTask(backlog_id, projectTask);
+		ProjectTask newProjectTask = projectTaskService.addProjectTask(backlog_id, projectTask, principal.getName());
 		
 		return new ResponseEntity<ProjectTask>(newProjectTask,HttpStatus.CREATED);
 	}
@@ -65,9 +63,9 @@ public class BacklogController {
 	}
 	
 	@GetMapping("/{backlog_id}")
-	private Iterable<ProjectTask> getProjectTasks(@PathVariable String backlog_id){
+	private Iterable<ProjectTask> getProjectTasks(@PathVariable String backlog_id, Principal principal){
 				
-		return projectTaskService.getProjectTasksById(backlog_id);
+		return projectTaskService.getProjectTasksById(backlog_id, principal.getName());
 	}
 	
 	@PatchMapping("/{backlog_id}/{projectSequence}")
