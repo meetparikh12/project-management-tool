@@ -55,9 +55,9 @@ public class BacklogController {
 //	}
 	
 	@GetMapping("/{backlog_id}/{projectSequence}")
-	private ResponseEntity<?> getProjectTaskByProjectSequence(@PathVariable String projectSequence, @PathVariable String backlog_id){
+	private ResponseEntity<?> getProjectTaskByProjectSequence(@PathVariable String projectSequence, @PathVariable String backlog_id, Principal principal){
 		
-		ProjectTask projectTask = projectTaskService.getSingleProjectTask(projectSequence, backlog_id);
+		ProjectTask projectTask = projectTaskService.getSingleProjectTask(projectSequence, backlog_id, principal.getName());
 		
 		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
 	}
@@ -70,21 +70,21 @@ public class BacklogController {
 	
 	@PatchMapping("/{backlog_id}/{projectSequence}")
 	private ResponseEntity<?> updateProjectTaskByProjectSequence(@Valid @RequestBody ProjectTask updatedProjectTask, BindingResult bindingResult, @PathVariable String backlog_id, 
-			@PathVariable String projectSequence) {
+			@PathVariable String projectSequence, Principal principal) {
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
 		if(errorMap != null) {
 			return errorMap;
 		}
-		ProjectTask projectTask = projectTaskService.updateProjectTask(updatedProjectTask, backlog_id, projectSequence);
+		ProjectTask projectTask = projectTaskService.updateProjectTask(updatedProjectTask, backlog_id, projectSequence, principal.getName());
 		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
 	
 	}
 
 	@DeleteMapping("/{backlog_id}/{projectSequence}")
-	private ResponseEntity<?> deleteProjectTask(@PathVariable String projectSequence, @PathVariable String backlog_id) {
+	private ResponseEntity<?> deleteProjectTask(@PathVariable String projectSequence, @PathVariable String backlog_id, Principal principal) {
 		
-		projectTaskService.deleteProjectTaskById(projectSequence, backlog_id);
+		projectTaskService.deleteProjectTaskById(projectSequence, backlog_id, principal.getName());
 		return new ResponseEntity<String>("Project Task '" +projectSequence +"' is deleted.",HttpStatus.OK);
 		
 	}
