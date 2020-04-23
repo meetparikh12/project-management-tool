@@ -1,5 +1,6 @@
 package com.meet.projectboard.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -33,12 +34,12 @@ public class ProjectController {
 	private MapValidationErrorService mapValidationErrorService;
 	
 	@PostMapping("")
-	private ResponseEntity<?> addProject(@Valid @RequestBody Project project, BindingResult bindingResult){
+	private ResponseEntity<?> addProject(@Valid @RequestBody Project project, BindingResult bindingResult, Principal principal){
 		
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(bindingResult);
 		if(errorMap != null) return errorMap;
 		
-		Project newProject = projectService.saveOrUpdateProject(project);
+		Project newProject = projectService.saveOrUpdateProject(project, principal.getName());
 		return new ResponseEntity<Project>(newProject,HttpStatus.OK);
 	}
 	

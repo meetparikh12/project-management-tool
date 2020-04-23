@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import com.meet.projectboard.exceptions.ProjectIdException;
 import com.meet.projectboard.model.Backlog;
 import com.meet.projectboard.model.Project;
+import com.meet.projectboard.model.User;
 import com.meet.projectboard.repository.BacklogRepository;
 import com.meet.projectboard.repository.ProjectRepository;
+import com.meet.projectboard.repository.UserRepository;
 
 @Service
 public class ProjectService {
@@ -20,9 +22,16 @@ public class ProjectService {
 	@Autowired
 	private BacklogRepository backlogRepository;
 	
-	public Project saveOrUpdateProject(Project project) {
+	@Autowired
+	private UserRepository userRepository;
+	
+	public Project saveOrUpdateProject(Project project, String username) {
 		
 		try {
+			
+			User user = userRepository.findByUsername(username);
+			project.setUser(user);
+			project.setProjectLeader(user.getUsername());
 			String projectIdentifier = project.getProjectIdentifier().toUpperCase();
 			project.setProjectIdentifier(projectIdentifier);
 			
