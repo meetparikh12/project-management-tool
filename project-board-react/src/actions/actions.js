@@ -56,3 +56,17 @@ export function getProjectById(project){
         payload: project
     }
 }
+
+export function addNewUser(user){
+    return{
+        type: actionTypes.ADD_NEW_USER,
+        payload: user
+    }
+}
+
+export function userCreationError(error) {
+    return {
+        type: actionTypes.USER_CREATION_ERRROR,
+        payload: error
+    }
+}
