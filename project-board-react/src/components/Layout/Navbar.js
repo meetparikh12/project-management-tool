@@ -24,14 +24,14 @@ export default function Navbar() {
 
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link " href="register.html">
+                                <Link class="nav-link" to="/register">
                                     Sign Up
-                                </a>
+                                </Link>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="login.html">
+                                <Link class="nav-link" to="/login">
                                     Login
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
