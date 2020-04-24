@@ -16,6 +16,7 @@ import jwt_decode from 'jwt-decode';
 import setJWTToken from './securityUtils/setJWTToken'
 import { SET_CURRENT_USER } from './actions/actionTypes';
 import store from './store';
+
 const jwtToken = localStorage.jwtToken;
 if(jwtToken){
   setJWTToken(jwtToken);
@@ -27,9 +28,15 @@ if(jwtToken){
   });
 
   const currentTime = Date.now()/1000;
-  // if(decoded_token.exp < currentTime){
-  //   window.location.href("/");
-  // }
+  if(decoded_token.exp < currentTime){
+    localStorage.removeItem("jwtToken");
+    setJWTToken(false);
+    store.dispatch({
+      type: SET_CURRENT_USER,
+      payload: {}
+    });
+    window.location.href ="/";
+  }
 }
 
 class App extends Component {
