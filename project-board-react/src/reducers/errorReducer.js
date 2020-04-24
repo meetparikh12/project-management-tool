@@ -3,7 +3,8 @@ import * as actionTypes from '../actions/actionTypes';
 const initialState = {
     project_task_error: {},
     project_error: {},
-    user_creation_error: {}
+    user_creation_error: {},
+    login_error: {}
 }
 
 export const errorReducer = (state = initialState, action) => {
@@ -23,6 +24,12 @@ export const errorReducer = (state = initialState, action) => {
             return {
                 user_creation_error: action.payload
             }
+        
+        case actionTypes.LOGIN_REQUEST_ERROR:
+            return {
+                login_error: action.payload
+            }
+
         default: 
             return {...state}
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import classnames from 'classnames';
-import { addNewUser, userCreationError} from '../../actions/actions';
+import { userCreationError} from '../../actions/actions';
 import axios from 'axios';
 import { PropTypes } from 'prop-types';
 

@@ -1,19 +1,25 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
+    user: {},
+    validToken: false
+}
 
+const booleanActionPayload = payload => {
+    if(payload){
+        return true
+    }else{
+        return false
+    }
 }
 
 const userReducer = (state=initialState,action) => {
     switch (action.type) {
-        case actionTypes.ADD_NEW_USER:
+        case actionTypes.SET_CURRENT_USER:
             return {
-                ...state
-            }
-
-        case actionTypes.GET_USER:
-            return {
-                ...state
+                ...state,
+                user: action.payload,
+                validToken: booleanActionPayload(action.payload)
             }
 
         default: 
