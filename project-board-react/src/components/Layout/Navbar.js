@@ -7,7 +7,7 @@ export default function Navbar() {
             <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-4">
                 <div class="container">
                     <Link class="navbar-brand" to="/">
-                        Personal Project Tool
+                        Personal Project Management Tool
                     </Link>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
                         <span class="navbar-toggler-icon" />
@@ -16,7 +16,7 @@ export default function Navbar() {
                     <div class="collapse navbar-collapse" id="mobile-nav">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <Link class="nav-link" to="/">
+                                <Link class="nav-link" to="/dashboard">
                                     Dashboard
                                 </Link>
                             </li>

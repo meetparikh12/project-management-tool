@@ -4,13 +4,9 @@ package com.meet.projectboard.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.meet.projectboard.exceptions.ProjectNotFoundException;
 import com.meet.projectboard.exceptions.ProjectTaskNotFoundException;
 import com.meet.projectboard.model.Backlog;
-import com.meet.projectboard.model.Project;
 import com.meet.projectboard.model.ProjectTask;
-import com.meet.projectboard.repository.BacklogRepository;
-import com.meet.projectboard.repository.ProjectRepository;
 import com.meet.projectboard.repository.ProjectTaskRepository;
 
 /**
@@ -23,10 +19,7 @@ public class ProjectTaskService {
 
 	@Autowired
 	private ProjectTaskRepository projectTaskRepository;
-	@Autowired
-	private BacklogRepository backlogRepository;
-	@Autowired
-	private ProjectRepository projectRepository;
+	
 	@Autowired
 	private ProjectService projectService;
 //	public ProjectTask saveOrUpdateProjectTask(ProjectTask projectTask) {

@@ -129,7 +129,7 @@ const mapDispatchToProps = dispatchEvent => {
             axios
                 .post("/api/project", project)
                 .then((res) => {
-                    history.push("/");
+                    history.push("/dashboard");
                     dispatchEvent(addProject({}));
                 })
                 .catch((error) => {

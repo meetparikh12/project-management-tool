@@ -169,7 +169,7 @@ const mapDispatchToProps = dispatchEvent => {
         getProjectTask: (backlog_id, projectSequence, history) => {
               axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
                   .then((res) => dispatchEvent(getProjectTask(res.data)))
-                  .catch((error) => history.push("/"))
+                  .catch((error) => history.push("/dashboard"))
           }
     }
 }

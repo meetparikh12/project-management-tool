@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from './components/Navbar';
+import Navbar from './components/Layout/Navbar';
+import Landing from './components/Layout/Landing';
 import ProjectBoard from './components/ProjectBoard/ProjectBoard';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
@@ -18,7 +19,16 @@ class App extends Component {
       <Router>
         <div className="App">
           <Navbar/>
-          <Route exact path = "/" component= { Dashboard } />
+          { 
+            //Public routes
+          }
+          <Route exact path = "/" component={Landing}/>
+
+          { 
+            //Private routes
+          }
+          
+          <Route path = "/dashboard" component= { Dashboard } />
           <Route path = "/addProject" component = {AddProject}/>
           <Route path="/updateProject/:id" component = {UpdateProject} />
           <Route path="/projectboard/:projectId" component={ProjectBoard} />
