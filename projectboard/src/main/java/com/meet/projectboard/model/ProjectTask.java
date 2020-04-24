@@ -45,7 +45,10 @@ public class ProjectTask {
     private String projectIdentifier;
     
 	@Column(updatable = false)
+	@JsonFormat(pattern="yyyy-mm-dd")
     private Date created_At;
+	
+	@JsonFormat(pattern="yyyy-mm-dd")
     private Date updated_At;
     
     @ManyToOne(fetch = FetchType.EAGER)

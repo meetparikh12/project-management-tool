@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from './components/Layout/Navbar';
 import Landing from './components/Layout/Landing';
 import ProjectBoard from './components/ProjectBoard/ProjectBoard';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import AddProjectTask from './components/ProjectBoard/ProjectTasks/AddProjectTask';
 import UpdateProjectTask from './components/ProjectBoard/ProjectTasks/UpdateProjectTask';
@@ -16,6 +16,7 @@ import jwt_decode from 'jwt-decode';
 import setJWTToken from './securityUtils/setJWTToken'
 import { SET_CURRENT_USER } from './actions/actionTypes';
 import store from './store';
+import SecureRoute from './securityUtils/SecureRoute';
 
 const jwtToken = localStorage.jwtToken;
 if(jwtToken){
@@ -55,13 +56,14 @@ class App extends Component {
           { 
             //Private routes
           }
-
-          <Route path = "/dashboard" component= { Dashboard } />
-          <Route path = "/addProject" component = {AddProject}/>
-          <Route path="/updateProject/:id" component = {UpdateProject} />
-          <Route path="/projectboard/:projectId" component={ProjectBoard} />
-          <Route path="/addProjectTask/:projectId" component={AddProjectTask} />
-          <Route path="/updateProjectTask/:backlog_id/:projectSequence" component={UpdateProjectTask}/>
+          <Switch>
+            <SecureRoute exact path = "/dashboard" component= { Dashboard } />
+            <SecureRoute path = "/addProject" component = {AddProject}/>
+            <SecureRoute path="/updateProject/:id" component = {UpdateProject} />
+            <SecureRoute path="/projectboard/:projectId" component={ProjectBoard} />
+            <SecureRoute path="/addProjectTask/:projectId" component={AddProjectTask} />
+            <SecureRoute path="/updateProjectTask/:backlog_id/:projectSequence" component={UpdateProjectTask}/>
+          </Switch>
         </div>
       </Router>
 

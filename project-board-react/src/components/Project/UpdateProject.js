@@ -15,6 +15,7 @@ class UpdateProject extends Component {
             endDate:"",
             projectName:"",
             projectDescription:"",
+            projectLeader:"",
             projectIdentifier: "",
             error: {}
         }
@@ -30,7 +31,8 @@ class UpdateProject extends Component {
             projectIdentifier: nextProps.current_project.projectIdentifier,
             projectDescription: nextProps.current_project.projectDescription,
             startDate: nextProps.current_project.startDate,
-            endDate: nextProps.current_project.endDate
+            endDate: nextProps.current_project.endDate,
+            projectLeader: nextProps.current_project.projectLeader
         })
     }
         if(nextProps.error){
@@ -54,7 +56,8 @@ class UpdateProject extends Component {
             "projectIdentifier" : this.state.projectIdentifier,
             "projectDescription": this.state.projectDescription,
             "startDate": this.state.startDate,
-            "endDate": this.state.endDate
+            "endDate": this.state.endDate,
+            "projectLeader": this.state.projectLeader
         }
       this.props.updateProject(updatedProject,this.props.history);
     }

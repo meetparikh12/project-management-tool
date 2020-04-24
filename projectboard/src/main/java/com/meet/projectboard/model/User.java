@@ -23,6 +23,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table(name="user")
@@ -55,9 +56,11 @@ public class User implements UserDetails{
 	@OneToMany( cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
 	private List<Project> projects = new ArrayList<Project>();
 	
+	@JsonFormat(pattern="yyyy-mm-dd")
 	@Column(updatable = false)
 	private Date createdAt;
-
+	
+	@JsonFormat(pattern="yyyy-mm-dd")
 	private Date updatedAt;
 	
 	@PrePersist
