@@ -21,7 +21,7 @@ class AddProjectTask extends Component {
         this.onChange = this.onChange.bind(this);
         this.onSubmitForm = this.onSubmitForm.bind(this);
     }
-
+    
     componentWillReceiveProps(nextProps){
         if(nextProps.errors){
             this.setState({
@@ -29,6 +29,7 @@ class AddProjectTask extends Component {
             })
         }
     }
+    
     onChange(e){
         e.preventDefault();
         this.setState({
@@ -48,6 +49,10 @@ class AddProjectTask extends Component {
 
         }
         this.props.addProjectTask(projectTask,this.props.history,this.state.projectIdentifier);
+
+        if(this.props.errors.projectIdentifier){
+            this.props.history.push("/dashboard");
+        }
     }
     render() {
         const {errors} = this.state;
@@ -130,6 +135,7 @@ const mapDispatchToProps = dispatchEvent => {
             }).catch((error) => {
                 console.log(error);
                 dispatchEvent(addProjectTask(error.response.data));
+
             })
         }
     };
