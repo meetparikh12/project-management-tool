@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
-import classnames from 'classnames';
-import { loginRequestError } from '../../actions/actions';
 import axios from 'axios';
 import { PropTypes } from 'prop-types';
 import jwt_decode from 'jwt-decode';
 import setJWTToken from '../../securityUtils/setJWTToken'
 import { SET_CURRENT_USER } from '../../actions/actionTypes';
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+toast.configure();
 class Login extends Component {
     constructor(props){
         super(props);
         this.state = {
-            username: "",
-            password: "",
-            errors: {}
+            email: "",
+            password: ""
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -34,7 +34,7 @@ class Login extends Component {
     onSubmit(e){
         e.preventDefault();
         const user = {
-            "username": this.state.username,
+            "email": this.state.email,
             "password": this.state.password
         }
         this.props.loginRequest(user);
@@ -44,15 +44,9 @@ class Login extends Component {
         if(nextProps.loggedInUser.validToken){
             this.props.history.push("/dashboard");
         }
-        if(nextProps.errors){
-            this.setState({
-                errors: nextProps.errors
-            })
-        }
     }
 
     render() {
-        const { errors } = this.state;
         return (
             <div className="Login">
                 <div className="container">
@@ -61,18 +55,14 @@ class Login extends Component {
                             <h1 className="display-4 text-center">Log In</h1>
                             <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
-                                    <input type="text" className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.username })} placeholder="Email Address (Username)" name="username"
-                                    onChange={this.onChange} value={this.state.username} />
-                                    {errors.username && (<div className="invalid-feedback">{errors.username}</div>)}
-                                </div>
+                                    <input type="text" className="form-control form-control-lg" placeholder="Email Address" name="email"
+                                    onChange={this.onChange} value={this.state.email} />
+                                   </div>
                                 <div className="form-group">
-                                    <input type="password" className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.password})} placeholder="Password" name="password" 
+                                    <input type="password" className="form-control form-control-lg" placeholder="Password" name="password" 
                                         onChange={this.onChange} value={this.state.password} />
-                                    {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
                                 </div>
-                                <input type="submit" className="btn btn-info btn-block mt-4" />
+                                <input type="submit" value="Login" className="btn btn-info btn-block mt-4" />
                             </form>
                         </div>
                     </div>
@@ -84,13 +74,11 @@ class Login extends Component {
 
 Login.propTypes = {
     loginRequest: PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired,
     loggedInUser: PropTypes.object.isRequired
 }
 const mapStateToProps = state => {
     return {
         loggedInUser : state.user,
-        errors: state.getErrorReducer.login_error
     }
 }
 const mapDispatchToProps = dispatchEvent => {
@@ -98,7 +86,7 @@ const mapDispatchToProps = dispatchEvent => {
         loginRequest: async (user) => {
             try {
                 // post => Login request
-                const res = await axios.post("/api/users/login",user);
+                const res = await axios.post("http://localhost:4200/api/users/login",user);
                 // extract token from res.data
                 const {token} = res.data;
                 // store token in local storage
@@ -106,14 +94,14 @@ const mapDispatchToProps = dispatchEvent => {
                 // set token in header
                 setJWTToken(token);
                 //decode token on React
-                const decoded = jwt_decode(token);
+                const decoded_token = jwt_decode(token);
                 //dispatch to our UserReducer
                 dispatchEvent({
                     type: SET_CURRENT_USER,
-                    payload: decoded
+                    payload: decoded_token
                 });
             } catch (error) {
-                dispatchEvent(loginRequestError(error.response.data))
+                toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
             }
         } 
     }

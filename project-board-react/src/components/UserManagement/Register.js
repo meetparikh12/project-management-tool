@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
-import classnames from 'classnames';
-import { userCreationError} from '../../actions/actions';
 import axios from 'axios';
 import { PropTypes } from 'prop-types';
+import { toast } from 'react-toastify';
 
 class Register extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            username:"",
-            fullName:"",
+            email:"",
+            name:"",
             password:"",
-            confirmPassword:"",
-            errors:{}
+            confirmPassword:""
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -35,24 +33,15 @@ class Register extends Component {
     onSubmit(e){
         e.preventDefault();
         const newUser = {
-            "username": this.state.username,
-            "fullName": this.state.fullName,
+            "name": this.state.name,
+            "email": this.state.email,
             "password": this.state.password,
             "confirmPassword": this.state.confirmPassword
         }
         this.props.createNewUser(newUser,this.props.history);
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.errors){
-            this.setState({
-                errors: nextProps.errors
-            })
-        }
-    }
-
     render() {
-        const { errors } = this.state;
         return (
             <div className="Register">
                 <div className="container">
@@ -62,27 +51,20 @@ class Register extends Component {
                             <p className="lead text-center">Create your Account</p>
                             <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
-                                    <input type="text" name="fullName" value={this.state.fullName} onChange= {this.onChange} className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.fullName})} placeholder="Name" />
-                                    {errors.fullName && (<div className="invalid-feedback">{errors.fullName}</div>)}
+                                    <input type="text" name="name" value={this.state.name} onChange= {this.onChange} className="form-control form-control-lg"
+                                     placeholder="Name" />
                                 </div>
                                 <div className="form-group">
-                                    <input type="text" value={this.state.username} onChange= {this.onChange} name="username" className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.username})} placeholder="Email Address (Username)" />
-                                    {errors.username && (<div className="invalid-feedback">{errors.username}</div>)} 
-
+                                    <input type="text" value={this.state.email} onChange= {this.onChange} name="email" className="form-control form-control-lg" 
+                                    placeholder="Email Address"/>
                                 </div>
                                 <div className="form-group">
-                                    <input type="password" value={this.state.password} onChange= {this.onChange} placeholder="Password" name="password" className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.password})} />
-                                    {errors.password && (<div className="invalid-feedback">{errors.password}</div>)}
+                                    <input type="password" value={this.state.password} onChange= {this.onChange} placeholder="Password" name="password" className="form-control form-control-lg"/>
                                 </div>
                                 <div className="form-group">
-                                    <input type="password" value={this.state.confirmPassword} onChange= {this.onChange}  placeholder="Confirm Password" name="confirmPassword" className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.confirmPassword})} />
-                                    {errors.confirmPassword && (<div className="invalid-feedback">{errors.confirmPassword}</div>)} 
+                                    <input type="password" value={this.state.confirmPassword} onChange= {this.onChange}  placeholder="Confirm Password" name="confirmPassword" className="form-control form-control-lg"/>
                                 </div>
-                                <input type="submit" className="btn btn-info btn-block mt-4" />
+                                <input type="submit" value="Sign up" className="btn btn-info btn-block mt-4" />
                             </form>
                         </div>
                     </div>
@@ -94,29 +76,24 @@ class Register extends Component {
 
 Register.propTypes = {
     createNewUser : PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired,
     loggedInUser: PropTypes.object.isRequired
 
 }
 const mapStateToProps = state => {
     return {
-        errors: state.getErrorReducer.user_creation_error,
         loggedInUser: state.user,
-
     }
 }
 const mapDispatchToProps = dispatchEvent => {
     return {
         createNewUser : (newUser,history) => {
                 axios
-                .post("api/users/register",newUser)
+                .post("http://localhost:4200/api/users/register",newUser)
                 .then((res)=> {
                     history.push("/login");
-                    dispatchEvent(userCreationError({}))
                 })
                 .catch((error) => {
-                    console.log(error);
-                    dispatchEvent(userCreationError(error.response.data))
+                    toast.error(error.response.data.message[0].msg || error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
                 })
         }
     }
