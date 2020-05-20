@@ -1,17 +1,19 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const ErrorHandling = require('./models/ErrorHandling');
+const UserRoutes = require('./routes/users');
 
 app.use(bodyParser.json());
 
+app.use('/api/users', UserRoutes);
+
 app.use('/', (req,res,next)=> {
-    const error = new Error('Specified route does not exist.')
-    error.statusCode = 404;
-    next(error);
+    next(new ErrorHandling('Specified route does not exist', 404));
 });
 
 app.use((error,req,res,next)=> {
-    res.status(error.statusCode).json({message: error.message});
+    res.status(error.status).json({message: error.message});
 })
 
 app.listen(4200);
