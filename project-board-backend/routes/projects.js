@@ -18,4 +18,6 @@ route.patch('/:projectIdentifier', [
     body('projectDescription').trim().isLength({min: 10}).withMessage('Project Description must be 10 characters long.')
 ], projectController.UPDATE_PROJECT_INFO);
 
+route.delete('/:projectIdentifier', projectController.DELETE_PROJECT);
+
 module.exports = route;

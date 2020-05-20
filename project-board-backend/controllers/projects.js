@@ -20,7 +20,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
     let project;
     try {
         project = await Project.findOne({
-            projectIdentifier: projectIdentifier
+            projectIdentifier: projectIdentifier.toUpperCase()
         });
     } catch(err) {
         return next(new ErrorHandling('Try again', 500));
@@ -30,7 +30,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
     }
     project = new Project({
         projectName,
-        projectIdentifier,
+        projectIdentifier: projectIdentifier.toUpperCase(),
         projectDescription,
         startDate,
         endDate
@@ -64,7 +64,7 @@ exports.GET_SINGLE_PROJECT = async (req,res,next) => {
     let project;
     try {
         project = await Project.findOne({
-            projectIdentifier: projectIdentifier
+            projectIdentifier: projectIdentifier.toUpperCase()
         });
     }catch(err){
         return next(new ErrorHandling('Project not fetched', 500))
@@ -87,7 +87,7 @@ exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
     const {projectIdentifier} = req.params;
     let project;
     try {
-        project = await Project.findOne({projectIdentifier: projectIdentifier})
+        project = await Project.findOne({projectIdentifier: projectIdentifier.toUpperCase()})
     } catch(err) {
         return next(new ErrorHandling('Project not fetched'));
     } 
@@ -105,4 +105,23 @@ exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
         return next(new ErrorHandling('Project not updated', 500))
     }
      res.status(200).json({message: 'Project updated successfully!'})
+}
+
+exports.DELETE_PROJECT = async(req,res,next)=> {
+    const {projectIdentifier} = req.params;
+    let project;
+    try {
+        project = await Project.findOne({projectIdentifier: projectIdentifier.toUpperCase()})
+    } catch(err){
+        return next(new ErrorHandling('Project not fetched', 500))
+    } 
+    if(!project){
+        return next(new ErrorHandling(`Project not found with ID: ${projectIdentifier}`, 404))
+    }
+    try {
+        await project.remove();
+    }catch(err){
+        return next(new ErrorHandling('Project not deleted', 500))
+    }
+    res.status(200).json({message: 'Project deleted Successfully!'})
 }
