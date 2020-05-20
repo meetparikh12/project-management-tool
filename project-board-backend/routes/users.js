@@ -1,43 +1,12 @@
 const express = require('express');
 const route = express.Router();
-const User = require('../models/User');
-const ErrorHandling = require('../models/ErrorHandling');
-const bcrypt = require('bcryptjs');
+const userController = require('../controllers/users');
+const {body} = require('express-validator');
 
-route.post('/register', async (req,res,next)=> {
-    const {name, email, password, confirmPassword }  =  req.body;
-    let user; 
-    try {
-        user = await User.findOne({email: email})
-    } catch(error) {
-        return next(new ErrorHandling('Try again!', 500));
-    } 
-    if(user) {
-        return next(new ErrorHandling('Email already exists', 422));        
-    }
-    if(password !== confirmPassword) {
-        return next(new ErrorHandling('Password does not match', 422));
-    }
-    let hashedPassword;
-    try {
-        hashedPassword = await bcrypt.hash(password, 12);
-    } catch(error) {
-        return next(new ErrorHandling('Password not hashed!', 500));
-    }
-
-    const newUser = new User({
-        name,
-        email,
-        password: hashedPassword
-    })
-
-    try {
-        await newUser.save();
-    } catch(error) {
-        return next(new ErrorHandling('User not registered!', 500));
-    }
-
-    res.status(201).json({user: newUser})
-})
+route.post('/register', [
+    body('name').trim().isLength({min: 5}).withMessage('Name must be atleast 5 characters long.'),
+    body('email').trim().isEmail().normalizeEmail().withMessage('Please provide a valid Email.'),
+    body('password').trim().isLength({min: 6}).withMessage('Password must be 6 characters long.')
+],userController.SIGNUP_USER);
 
 module.exports = route;
