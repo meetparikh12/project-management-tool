@@ -2,22 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import  {addProject} from '../../actions/actions';
-import classnames from 'classnames';
-
+import { toast } from 'react-toastify';
+toast.configure();
 class UpdateProject extends Component {
     
     constructor(props){
         super(props);
         this.state = {
-            id: 0,
             startDate:"",
             endDate:"",
             projectName:"",
             projectDescription:"",
-            projectLeader:"",
-            projectIdentifier: "",
-            error: {}
+            //projectLeader:"",
+            projectIdentifier: ""
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -25,19 +22,13 @@ class UpdateProject extends Component {
     
     UNSAFE_componentWillReceiveProps(nextProps){
         if(nextProps.current_project){
-        this.setState({
-            id: nextProps.current_project.id,
-            projectName: nextProps.current_project.projectName,
-            projectIdentifier: nextProps.current_project.projectIdentifier,
-            projectDescription: nextProps.current_project.projectDescription,
-            startDate: nextProps.current_project.startDate,
-            endDate: nextProps.current_project.endDate,
-            projectLeader: nextProps.current_project.projectLeader
-        })
-    }
-        if(nextProps.error){
             this.setState({
-                error: nextProps.error
+                projectName: nextProps.current_project.projectName,
+                projectIdentifier: nextProps.current_project.projectIdentifier,
+                projectDescription: nextProps.current_project.projectDescription,
+                startDate: nextProps.current_project.startDate,
+                endDate: nextProps.current_project.endDate,
+                //projectLeader: nextProps.current_project.projectLeader
             })
         }
     }
@@ -51,19 +42,16 @@ class UpdateProject extends Component {
     onSubmit(e){
         e.preventDefault();
         const updatedProject = {
-            "id": this.state.id,
             "projectName": this.state.projectName,
-            "projectIdentifier" : this.state.projectIdentifier,
             "projectDescription": this.state.projectDescription,
             "startDate": this.state.startDate,
             "endDate": this.state.endDate,
-            "projectLeader": this.state.projectLeader
+            //"projectLeader": this.state.projectLeader
         }
-      this.props.updateProject(updatedProject,this.props.history);
+      this.props.updateProject(updatedProject, this.state.projectIdentifier,this.props.history);
     }
 
     render() {
-        const { error } = this.state;
         return (
             <div className="UpdateProject">
                 <div className="project">
@@ -74,23 +62,17 @@ class UpdateProject extends Component {
                                 <hr />
                                 <form onSubmit = {this.onSubmit} >
                                     <div className="form-group">
-                                        <input type="text" className={classnames("form-control form-control-lg",{
-                                            "is-invalid" : error.projectName
-                                        })} 
+                                        <input type="text" className="form-control form-control-lg" 
                                         name="projectName" onChange = {this.onChange} value = {this.state.projectName} placeholder="Project Name" />
-                                        {error.projectName && (<div className="invalid-feedback">{error.projectName}</div>)}
                                     </div>
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg"
-                                        name="projectIdentifier" value={this.state.projectIdentifier} 
+                                        name="projectIdentifier" value={this.props.current_project.projectIdentifier} 
                                         placeholder="Unique Project ID" disabled />
                                     </div>
                                     <div className="form-group">
-                                        <textarea className={classnames("form-control form-control-lg",{
-                                            "is-invalid": error.projectDescription
-                                        })} 
+                                        <textarea className="form-control form-control-lg"
                                         name="projectDescription"  onChange = {this.onChange}  value = {this.state.projectDescription} placeholder="Project Description"></textarea>
-                                        {error.projectDescription && (<div className="invalid-feedback">{error.projectDescription}</div>)}
                                     </div>
                                     <h6>Start Date</h6>
                                     <div className="form-group">
@@ -103,7 +85,7 @@ class UpdateProject extends Component {
                                         name="endDate"  onChange = {this.onChange} value = {this.state.endDate} />
                                     </div>
 
-                                    <input type="submit" className="btn btn-primary btn-block mt-4" />
+                                    <input type="submit" value="Update Project" className="btn btn-primary btn-block mt-4" />
                                 </form>
                             </div>
                         </div>
@@ -115,28 +97,27 @@ class UpdateProject extends Component {
 }
 UpdateProject.propTypes = {
     current_project : PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired,
     updateProject : PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => {
     return {
         current_project : state.getProjectReducer.currentProject,
-        error: state.getErrorReducer.project_error
     }
 }
 
 const mapDispatchToProps = dispatchEvent => {
     return {
-        updateProject : (project,history) => {
+        updateProject : (project,projectId,history) => {
             axios
-                .post("/api/project", project)
+                .patch(`http://localhost:4200/api/projects/${projectId}`, project)
                 .then((res) => {
                     history.push("/dashboard");
-                    dispatchEvent(addProject({}));
                 })
                 .catch((error) => {
-                    dispatchEvent(addProject(error.response.data))
+                    toast.error(error.response.data.message[0].msg || error.response.data.message, {
+                        position: toast.POSITION.BOTTOM_RIGHT
+                    });
                 })
         }
     }

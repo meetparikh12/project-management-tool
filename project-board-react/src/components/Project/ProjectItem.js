@@ -13,12 +13,12 @@ class ProjectItem extends Component {
 
     getProject(id){
         axios
-        .get(`/api/project/${id}`)
+        .get(`http://localhost:4200/api/projects/${id}`)
         .then((res)=> {
-            console.log(res.data);
-            this.props.getProjectById(res.data);
+            console.log(res.data.project);
+            this.props.getProjectById(res.data.project);
         })
-        .catch((error) => console.log(error))
+        .catch((error) => console.log(error.response.data));
     }
 
     deleteProject(projectID){
