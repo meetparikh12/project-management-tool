@@ -11,4 +11,11 @@ route.post('/', [
 
 route.get('/', projectController.GET_ALL_PROJECTS);
 
+route.get('/:projectIdentifier', projectController.GET_SINGLE_PROJECT);
+
+route.patch('/:projectIdentifier', [
+    body('projectName').trim().isLength({min: 6}).withMessage('Project name must be 6 characters long.'),
+    body('projectDescription').trim().isLength({min: 10}).withMessage('Project Description must be 10 characters long.')
+], projectController.UPDATE_PROJECT_INFO);
+
 module.exports = route;
