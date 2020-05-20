@@ -4,6 +4,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { deleteProject, getProjectById } from '../../actions/actions';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
 class ProjectItem extends Component {
     
     constructor(props){
@@ -15,7 +16,6 @@ class ProjectItem extends Component {
         axios
         .get(`http://localhost:4200/api/projects/${id}`)
         .then((res)=> {
-            console.log(res.data.project);
             this.props.getProjectById(res.data.project);
         })
         .catch((error) => console.log(error.response.data));
@@ -25,12 +25,13 @@ class ProjectItem extends Component {
 
         if(window.confirm(`You are deleting Project with ID '${projectID}' , this action cannot be undone.`)) {
             axios
-            .delete(`/api/project/${projectID}`)
+            .delete(`http://localhost:4200/api/projects/${projectID}`)
             .then((res) => {
-                console.log(res.data)
                 this.props.deleteProject(projectID)
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {
+                toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000})
+            })
         }
     }
 

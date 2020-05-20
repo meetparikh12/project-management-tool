@@ -9,8 +9,8 @@ class UpdateProject extends Component {
     constructor(props){
         super(props);
         this.state = {
-            startDate:"",
-            endDate:"",
+            startDate:" ",
+            endDate:" ",
             projectName:"",
             projectDescription:"",
             //projectLeader:"",
@@ -67,7 +67,7 @@ class UpdateProject extends Component {
                                     </div>
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg"
-                                        name="projectIdentifier" value={this.props.current_project.projectIdentifier} 
+                                        name="projectIdentifier" value={this.state.projectIdentifier} 
                                         placeholder="Unique Project ID" disabled />
                                     </div>
                                     <div className="form-group">
@@ -116,7 +116,8 @@ const mapDispatchToProps = dispatchEvent => {
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message[0].msg || error.response.data.message, {
-                        position: toast.POSITION.BOTTOM_RIGHT
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                        autoClose: 2000
                     });
                 })
         }
