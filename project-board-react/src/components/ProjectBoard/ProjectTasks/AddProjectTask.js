@@ -50,9 +50,10 @@ class AddProjectTask extends Component {
         }
         this.props.addProjectTask(projectTask,this.props.history,this.state.projectIdentifier);
 
-        if(this.props.errors.projectIdentifier){
-            this.props.history.push("/dashboard");
-        }
+        // if(this.props.errors.projectIdentifier){
+        //     this.props.history.push("/dashboard");
+        // }
+        
     }
     render() {
         const {errors} = this.state;

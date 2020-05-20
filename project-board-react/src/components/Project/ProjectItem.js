@@ -31,7 +31,6 @@ class ProjectItem extends Component {
                 this.props.deleteProject(projectID)
             })
             .catch((error) => console.log(error))
-            console.log("GELO");
         }
     }
 
