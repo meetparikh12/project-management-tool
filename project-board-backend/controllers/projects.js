@@ -10,10 +10,18 @@ exports.CREATE_PROJECT = async (req, res, next) => {
         err.status = 422;
         return next(err);
     }
-    const { projectName, projectID, projectDescription, startDate, endDate} = req.body;
+    const {
+        projectName,
+        projectIdentifier,
+        projectDescription,
+        startDate,
+        endDate
+    } = req.body;
     let project;
     try {
-        project = await Project.findOne({projectID: projectID});
+        project = await Project.findOne({
+            projectIdentifier: projectIdentifier
+        });
     } catch(err) {
         return next(new ErrorHandling('Try again', 500));
     }
@@ -22,7 +30,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
     }
     project = new Project({
         projectName,
-        projectID,
+        projectIdentifier,
         projectDescription,
         startDate,
         endDate
@@ -31,7 +39,22 @@ exports.CREATE_PROJECT = async (req, res, next) => {
     try {
         await project.save();
     } catch(err) {
+        console.log(err);
+        
         return next(new ErrorHandling('Project not created', 500));
     }
-    res.status(200).json({project})
+    res.status(200).json({message: 'Project Created successfully.'})
+}
+
+exports.GET_ALL_PROJECTS = async (req,res,next)=> {
+    let projects;
+    try {
+        projects = await Project.find();
+    } catch(err) {
+        return next(new ErrorHandling('Projects not fetched', 500))
+    }
+    if(projects.length===0){
+        return next(new ErrorHandling('No Projects found', 404))
+    }
+    res.status(200).json({projects});
 }

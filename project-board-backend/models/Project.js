@@ -5,7 +5,7 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     }, 
-    projectID: {
+    projectIdentifier: {
         type: String,
         required: true,
         unique: true
