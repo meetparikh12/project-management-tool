@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import { connect } from 'react-redux';
-import { addProject } from '../../actions/actions';
-import classnames from 'classnames';
-import PropTypes from 'prop-types';
-
+import {toast} from 'react-toastify';
+toast.configure();
 class AddProject extends Component {
     constructor(props){
         super(props);
@@ -13,19 +10,10 @@ class AddProject extends Component {
             projectIdentifier: '',
             projectDescription: '',
             start_date: '',
-            end_date: '',
-            errors: {}
+            end_date: ''
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps){
-        if(nextProps.projectError){
-            this.setState({
-                errors: nextProps.projectError
-            })
-        }
     }
 
     onChange(e){
@@ -46,29 +34,20 @@ class AddProject extends Component {
         }
 
         axios
-        .post("/api/project",newProject)
+        .post("http://localhost:4200/api/projects",newProject)
         .then((res) => {
-            alert(`Project with ID '${res.data.projectIdentifier}' created successfully.`);
+            alert(`Project with ID '${res.data.project.projectIdentifier}' created successfully.`);
             this.props.history.push("/dashboard");
-            this.props.getProjectErrors({});
-            this.setState({
-                projectName: '',
-                projectIdentifier: '',
-                projectDescription: '',
-                start_date: '',
-                end_date: '',
-                errors: {}
-            })
+        
         })
         .catch((error) => {
-            this.props.getProjectErrors(error.response.data);
-            console.log(error);
+            toast.error(error.response.data.message[0].msg || error.response.data.message, 
+                {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
         })
     
     }
 
     render() {
-        const { errors } = this.state;
         return (
             <div>
                 <div className="AddProject">
@@ -79,21 +58,15 @@ class AddProject extends Component {
                                 <hr />
                                 <form onSubmit={this.onSubmit}>
                                     <div className="form-group">
-                                        <input type="text" className={classnames("form-control form-control-lg",{
-                                            "is-invalid" : errors.projectName })} name="projectName" 
+                                        <input type="text" className="form-control form-control-lg" name="projectName" 
                                             onChange={this.onChange} value={this.state.projectName} placeholder="Project Name" />
-                                        { errors.projectName && (<div className="invalid-feedback"> {errors.projectName} </div>)}
                                     </div>
                                     <div className="form-group">
-                                        <input type="text" className={classnames("form-control form-control-lg",{
-                                            "is-invalid" : errors.projectIdentifier })} name="projectIdentifier" onChange={this.onChange} value={this.state.projectIdentifier} placeholder="Unique Project ID"
+                                        <input type="text" className="form-control form-control-lg" name="projectIdentifier" onChange={this.onChange} value={this.state.projectIdentifier} placeholder="Unique Project ID"
                                              />
-                                        { errors.projectIdentifier && (<div className="invalid-feedback"> {errors.projectIdentifier} </div>)}
                                     </div>
                                     <div className="form-group">
-                                        <textarea className={classnames("form-control form-control-lg",{
-                                            "is-invalid" : errors.projectDescription })} name="projectDescription" onChange={this.onChange} value={this.state.projectDescription} placeholder="Project Description"></textarea>
-                                        { errors.projectDescription && (<div className="invalid-feedback"> {errors.projectDescription} </div>)}
+                                        <textarea className="form-control form-control-lg" name="projectDescription" onChange={this.onChange} value={this.state.projectDescription} placeholder="Project Description"></textarea>
                                     </div>
                                     <h6>Start Date</h6>
                                     <div className="form-group">
@@ -104,7 +77,7 @@ class AddProject extends Component {
                                         <input type="date" className="form-control form-control-lg" name="end_date" onChange={this.onChange} value={this.state.end_date}/>
                                     </div>
 
-                                    <input type="submit" className="btn btn-primary btn-block mt-4" />
+                                    <input type="submit" value="Add Project" className="btn btn-primary btn-block mt-4" />
                                 </form>
                             </div>
                         </div>
@@ -115,30 +88,5 @@ class AddProject extends Component {
     }
 }
 
-AddProject.propTypes = {
 
-    projectError : PropTypes.object.isRequired,
-    getProjectErrors : PropTypes.func.isRequired
-
-}
-
-const mapStateToProps = (state) => {
-    return {
-        projectError: state.getErrorReducer.project_error
-    }
-}
-
-const mapDispatchToProps = dispatchEvent => {
-    
-    return {
-        
-        getProjectErrors: (error) => {
-            dispatchEvent(addProject(error));
-        } 
-    }
-
-}
-
-
-
-export default connect(mapStateToProps,mapDispatchToProps)(AddProject);
+export default AddProject;

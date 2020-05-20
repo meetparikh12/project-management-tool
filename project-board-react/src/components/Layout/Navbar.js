@@ -19,24 +19,24 @@ class Navbar extends React.Component {
     const userIsAuthenticated = () => {
         
         return (
-        <div class="collapse navbar-collapse" id="mobile-nav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <Link class="nav-link" to="/dashboard">
+        <div className="collapse navbar-collapse" id="mobile-nav">
+            <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">
                         Dashboard
                     </Link>
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <Link class="nav-link" to="/dashboard">
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard">
                         <i className="fas fa-user-circle mr-1"/> 
                         {user.fullName}
                     </Link>
                 </li>
-                <li class="nav-item">
-                    <Link class="nav-link" to="/" onClick={this.logout.bind(this)}>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/" onClick={this.logout.bind(this)}>
                         Logout
                     </Link>
                 </li>
@@ -48,16 +48,16 @@ class Navbar extends React.Component {
         
         return (
         
-        <div class="collapse navbar-collapse" id="mobile-nav">
+        <div className="collapse navbar-collapse" id="mobile-nav">
         
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <Link class="nav-link" to="/register">
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/register">
                         Sign up
                     </Link>
                 </li>
-                <li class="nav-item">
-                    <Link class="nav-link" to="/login">
+                <li className="nav-item">
+                    <Link className="nav-link" to="/login">
                         Login 
                     </Link>
                 </li>
@@ -72,13 +72,13 @@ class Navbar extends React.Component {
     }
     return (
         <div>
-            <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-4">
-                <div class="container">
-                    <Link class="navbar-brand" to="/">
+            <nav className="navbar navbar-expand-sm navbar-dark bg-primary mb-4">
+                <div className="container">
+                    <Link className="navbar-brand" to="/">
                         Personal Project Management Tool
                     </Link>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
-                        <span class="navbar-toggler-icon" />
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
+                        <span className="navbar-toggler-icon" />
                     </button>
                     
                     {headerLink}

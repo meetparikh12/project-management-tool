@@ -11,8 +11,8 @@ class Dashboard extends Component {
     componentDidMount(){
         
         axios
-        .get("/api/project")
-        .then((res) => this.props.getProjects(res.data))
+        .get("http://localhost:4200/api/projects")
+        .then((res) => this.props.getProjects(res.data.projects))
         .catch((error) => console.log(error))
     }
 
@@ -56,7 +56,7 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-    projects: PropTypes.object.isRequired,
+    projects: PropTypes.array.isRequired,
     getProjects: PropTypes.func.isRequired
 }
 
