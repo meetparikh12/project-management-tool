@@ -9,4 +9,6 @@ route.post('/register', [
     body('password').trim().isLength({min: 6}).withMessage('Password must be 6 characters long.')
 ],userController.SIGNUP_USER);
 
+route.post('/login', userController.LOGIN_USER);
+
 module.exports = route;

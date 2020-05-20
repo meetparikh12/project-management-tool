@@ -1,7 +1,8 @@
 const User = require('../models/User');
 const ErrorHandling = require('../models/ErrorHandling');
 const bcrypt = require('bcryptjs');
-const {validationResult} = require('express-validator')
+const {validationResult} = require('express-validator');
+
 exports.SIGNUP_USER = async (req, res, next) => {
     const error = validationResult(req);
     if(!error.isEmpty()){
@@ -51,5 +52,31 @@ exports.SIGNUP_USER = async (req, res, next) => {
 
     res.status(201).json({
         user
+    })
+}
+
+exports.LOGIN_USER = async (req,res,next)=> {
+    const { email, password } = req.body;
+    let user;
+    try {
+        user = await User.findOne({email: email})
+    } catch(err) {
+        return next(new ErrorHandling('Try again', 500))
+    }
+    if(!user) {
+        return next(new ErrorHandling('Invalid credentials', 500))
+    } 
+    let isPasswordEqual;
+    try {
+        isPasswordEqual = await bcrypt.compare(password, user.password);
+    } catch(err) {
+        return next(new ErrorHandling('Password not compared', 500));
+    } 
+    if(!isPasswordEqual) {
+        return next(new ErrorHandling('Invalid credentials', 500))        
+    }
+
+    res.status(200).json({
+        message: 'Log in successful!'
     })
 }
