@@ -11,4 +11,6 @@ route.post('/:projectIdentifier',  [
 
 route.get('/:projectIdentifier', projectTaskController.GET_ALL_PROJECT_TASKS);
 
+route.get('/:projectIdentifier/:taskId', projectTaskController.GET_SINGLE_PROJECT_TASK);
+
 module.exports = route;

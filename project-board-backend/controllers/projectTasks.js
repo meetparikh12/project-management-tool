@@ -23,35 +23,39 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
         return next(new ErrorHandling('Cannot fetch Project', 500));
     } 
     if(!project){
-        return next(new ErrorHandling(`Project not found with ID ${projectIdentifier}`, 404));
+        return next(new ErrorHandling(`Project not found with ID '${projectIdentifier}'`, 404));
     } 
     const { summary, acceptanceCriteria, dueDate, status, priority, taskId} = req.body;
-    // let projectTask;
-    // try {
-    //     projectTask = await ProjectTask.findOne({taskId: taskId})
-    // } catch(err) {
-    //     return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
-    // }
-    // if(projectTask ){
-    //     return next(new ErrorHandling(`Project Task already exist with ID: ${taskId}`, 404));
-    // }
+    let projectTask;
+
     try {
-        await project.projectTask.forEach(projectTask => {
-            if (projectTask.taskId === taskId) {
-                throw new ErrorHandling(`Project Task ${taskId} already exist in Project ID: ${projectIdentifier}`, 404);
-            }
-        });
-    } catch (err) {
-        return next(err);
+        projectTask = await ProjectTask.findOne({taskId: taskId});
+    } catch(err) {
+        console.log(err);
+        return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
     }
-    const newPT = new ProjectTask({
+
+    if(projectTask){
+        return next(new ErrorHandling(`Project Task with ID '${taskId}' already exist`, 404));
+    }
+
+    // try {
+    //     await project.projectTask.forEach(projectTask => {
+    //         if (projectTask.taskId === taskId) {
+    //             throw new ErrorHandling(`Project Task ${taskId} already exist in Project ID: ${projectIdentifier}`, 404);
+    //         }
+    //     });
+    // } catch (err) {
+    //     return next(err);
+    // }
+    projectTask = new ProjectTask({
         summary, acceptanceCriteria, dueDate, status, priority, taskId, project: projectIdentifier
     })
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
-        await newPT.save({session});
-        await project.projectTask.unshift(newPT);
+        await projectTask.save({session});
+        await project.projectTask.unshift(projectTask);
         await project.save({session});
         await session.commitTransaction();
     } catch(err) {
@@ -59,8 +63,8 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
         
         return next(new ErrorHandling('ProjectTask not added', 500))
     } 
-    res.status(201).json({projectTask: newPT});
-    
+    res.status(201).json({projectTask});
+
 }
 
 exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
@@ -74,7 +78,7 @@ exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
         return next(new ErrorHandling('Project not fetched!', 500));
     }
     if(!project) {
-        return next(new ErrorHandling(`Project not found with ID ${projectIdentifier}`, 404));
+        return next(new ErrorHandling(`Project does not exist with ID '${projectIdentifier}'`, 404));
     }
     let projectTasks;
     try {
@@ -83,8 +87,42 @@ exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
         return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
     }
     if(!projectTasks || projectTasks.length === 0){
-        return next(new ErrorHandling(`Project Tasks not found for Project ID ${projectIdentifier}`, 404));
+        return next(new ErrorHandling(`No Project Tasks found for Project ID '${projectIdentifier}'`, 404));
     }
     res.status(200).json({projectTasks});
+
+}
+
+exports.GET_SINGLE_PROJECT_TASK = async (req,res,next)=> {
+    let {projectIdentifier, taskId} = req.params;
+    projectIdentifier = projectIdentifier.toUpperCase();
+    let project;
+    try {
+        project = await Project.findOne({projectIdentifier});
+    } catch(err) {
+        return next(new ErrorHandling('Project not fetched!', 500));
+    } 
+
+    if(!project) {
+        return next(new ErrorHandling(`Project not found with ID '${projectIdentifier}'`, 404));
+    }
+    let projectTask;
+
+    try {
+        projectTask = await ProjectTask.findOne({taskId: taskId}) ;
+        
+    } catch(err) {
+        console.log(err);
+        return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
+    }
+
+    if(!projectTask){
+        return next(new ErrorHandling(`Project Task '${taskId}' does not exist`, 404));
+    }
+    if(projectTask.project !== projectIdentifier){
+        return next(new ErrorHandling(`Project Task '${taskId}' does not exist in Project with ID '${projectIdentifier}'`, 404));
+    }    
+
+    res.status(200).json({projectTask});
 
 }
