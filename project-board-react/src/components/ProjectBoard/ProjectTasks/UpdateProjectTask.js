@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import axios from 'axios';
 import PropTypes from "prop-types";
-import { addProjectTask, getProjectTask } from '../../../actions/actions';
+import { getProjectTask } from '../../../actions/actions';
+import { toast } from 'react-toastify';
 
 class UpdateProjectTask extends Component {
 
@@ -12,14 +12,12 @@ class UpdateProjectTask extends Component {
         super(props);
         this.state = {
             projectIdentifier: "",
-            projectSequence:"",
+            taskId:"",
             summary: "",
             acceptanceCriteria: "",
             dueDate: "",
-            priority: 0,
-            status: "",
-            id: 0,
-            errors: {}
+            priority: "",
+            status: ""
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -34,38 +32,29 @@ class UpdateProjectTask extends Component {
         
         if(nextProps.currentTask){
         this.setState({
-            id: nextProps.currentTask.id,
-            projectIdentifier: nextProps.currentTask.projectIdentifier,
+            projectIdentifier: nextProps.currentTask.project,
             summary: nextProps.currentTask.summary,
             acceptanceCriteria: nextProps.currentTask.acceptanceCriteria,
             dueDate: nextProps.currentTask.dueDate,
             priority: nextProps.currentTask.priority,
             status: nextProps.currentTask.status,
-            projectSequence: nextProps.currentTask.projectSequence
+            taskId: nextProps.currentTask.taskId
             })
         }
-        if(nextProps.errors){
-            this.setState({
-                errors: nextProps.errors
-            })
-        }
+       
     }
 
     onSubmit(e){
         e.preventDefault();
         const updateProjectTask = {
-            "id": this.state.id,
             "summary": this.state.summary,
             "acceptanceCriteria": this.state.acceptanceCriteria,
-            "projectIdentifier":this.state.projectIdentifier,
-            "projectSequence": this.state.projectSequence,
             "dueDate": this.state.dueDate,
             "priority": this.state.priority,
             "status": this.state.status
         }
 
-        this.props.updateProjectTask(updateProjectTask,this.props.history);
-        
+        this.props.updateProjectTask(updateProjectTask,this.state.projectIdentifier, this.state.taskId, this.props.history);
     }
 
     onChange(e){
@@ -76,30 +65,25 @@ class UpdateProjectTask extends Component {
     }
 
     render() {
-        const {errors} = this.state;
         return (
-
             <div className="UpdateProjectTask">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8 m-auto">
-                            
                             <Link 
                             to={`/projectboard/${this.state.projectIdentifier}`} className="btn btn-light">
                                 Back to Board
                             </Link>
                             
                             <h4 className="display-4 text-center">Add / Update Project Task</h4>
-                            <p class="lead text-center"><b>Project ID: </b>{this.state.projectIdentifier} | <b>Project Task ID: </b>
-                            {this.state.projectSequence} </p>
+                            <p className="lead text-center"><b>Project ID: </b>{this.state.projectIdentifier} | <b>Project Task ID: </b>
+                            {this.state.taskId} </p>
                             <form onSubmit={this.onSubmit}>
                                 <div className="form-group">
-                                    <input type="text" className={classnames("form-control form-control-lg",{
-                                        "is-invalid": errors.summary})}
+                                    <input type="text" className="form-control form-control-lg"
                                         name="summary" 
                                     value = {this.state.summary} placeholder="Project Task summary" 
                                     onChange={this.onChange}/>
-                                    {errors.summary && (<div className="invalid-feedback">{errors.summary}</div>)}
                                 </div>
                                 <div className="form-group">
                                     <textarea className="form-control form-control-lg" placeholder="Acceptance Criteria" 
@@ -111,10 +95,10 @@ class UpdateProjectTask extends Component {
                                 </div>
                                 <div className="form-group">
                                     <select className="form-control form-control-lg" onChange={this.onChange} value={this.state.priority} name="priority">
-                                        <option value={0}>Select Priority</option>
-                                        <option value={1}>High</option>
-                                        <option value={2}>Medium</option>
-                                        <option value={3}>Low</option>
+                                        <option value="">Select Priority</option>
+                                        <option value="HIGH">High</option>
+                                        <option value="MEDIUM">Medium</option>
+                                        <option value="LOW">Low</option>
                                     </select>
                                 </div>
                                 
@@ -122,8 +106,8 @@ class UpdateProjectTask extends Component {
                                     <select className="form-control form-control-lg" onChange={this.onChange} name="status" 
                                     value = {this.state.status}>
                                         <option value="">Select Status</option>
-                                        <option value="TO_DO">TO DO</option>
-                                        <option value="IN_PROGRESS">IN PROGRESS</option>
+                                        <option value="TO DO">TO DO</option>
+                                        <option value="IN PROGRESS">IN PROGRESS</option>
                                         <option value="DONE">DONE</option>
                                     </select>
                                 </div>
@@ -140,8 +124,7 @@ class UpdateProjectTask extends Component {
 UpdateProjectTask.propTypes = {
 
     updateProjectTask: PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired,
-    currentTask : PropTypes.func.isRequired,
+    currentTask : PropTypes.object.isRequired,
     getProjectTask: PropTypes.func.isRequired
 
 }
@@ -150,26 +133,29 @@ const mapStateToProps = state => {
     
     return {
         currentTask: state.getBacklogReducer.currentTask,
-        errors: state.getErrorReducer.project_task_error
     }
 }
 const mapDispatchToProps = dispatchEvent => {
     return {
-        updateProjectTask : (projectTask, history) => {
-            axios.patch(`/api/backlog/${projectTask.projectIdentifier}/${projectTask.projectSequence}`, projectTask)
+        updateProjectTask : (projectTask, backlog_id, taskId, history) => {
+            axios.patch(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${taskId}`, projectTask)
                 .then((res) => {
-                    history.push(`/projectboard/${projectTask.projectIdentifier}`);
-                    dispatchEvent(addProjectTask({}));
+                    history.push(`/projectboard/${backlog_id}`);
                 })
                 .catch((error) => {
                     console.log(error);
-                    dispatchEvent(addProjectTask(error.response.data));
+                    toast.error(error.response.data.message[0].msg || error.response.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT
+                    })
                 })
         },
-        getProjectTask: (backlog_id, projectSequence, history) => {
-              axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
-                  .then((res) => dispatchEvent(getProjectTask(res.data)))
-                  .catch((error) => history.push("/dashboard"))
+        getProjectTask: (backlog_id, taskId, history) => {
+              axios.get(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${taskId}`)
+                  .then((res) => dispatchEvent(getProjectTask(res.data.projectTask)))
+                  .catch((error) => {
+                      toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+                      history.push("/dashboard");
+                    })
           }
     }
 }
