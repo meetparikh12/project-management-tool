@@ -4,6 +4,7 @@ import { deleteProjectTask } from '../../../actions/actions';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import  PropTypes  from "prop-types";
+import { toast } from 'react-toastify';
 
 class ProjectTaskItem extends Component {
     
@@ -16,11 +17,14 @@ class ProjectTaskItem extends Component {
 
         if(window.confirm(`You are deleting Project Task ${projectSequence} , this action cannot be undone.`))
         {
-            axios.delete(`/api/backlog/${backlog_id}/${projectSequence}`)
+            axios.delete(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${projectSequence}`)
             .then((res) => {
                 this.props.deleteProjectTask(projectSequence);
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+                console.log(error);
+                toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+            });
         }
     
     }
@@ -62,7 +66,7 @@ class ProjectTaskItem extends Component {
                             View / Update
                         </Link>
 
-                        <button onClick = {() => this.deleteProjectTask(project_task.projectIdentifier,project_task.projectSequence)} className="btn btn-danger ml-4">
+                        <button onClick = {() => this.deleteProjectTask(project_task.project,project_task.taskId)} className="btn btn-danger ml-4">
                             Delete
                         </button>
                     </div>

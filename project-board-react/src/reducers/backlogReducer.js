@@ -17,7 +17,7 @@ const backlogReducer = (state = initialState, action) => {
             return {
                 ...state,    
                 projectTasks: state.projectTasks.filter((projectTask) => 
-                                projectTask.projectSequence !== action.payload)
+                                projectTask.taskId !== action.payload)
             }
 
         case actionTypes.GET_PROJECT_TASK:
