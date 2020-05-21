@@ -19,7 +19,12 @@ const projectSchema = new mongoose.Schema({
     }, 
     endDate: {
         type: Date
-    }
+    },
+    projectTask: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProjectTask',
+        required: true
+    }]
 }, {timestamps: true})
 
 module.exports = mongoose.model('Project', projectSchema);
