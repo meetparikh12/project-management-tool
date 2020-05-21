@@ -4,8 +4,14 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 const SecureRoute = ({ component:Component, loggedinUser, ...otherProps }) => {
-  return (<Route {...otherProps} render = { props => loggedinUser.validToken === true ? (<Component {...props}/>) : (<Redirect to="login"/>)}/>)
-};
+  return (<Route {...otherProps} render = { props => {
+    if(loggedinUser.user.userId){
+      return (<Component {...props}/>)
+    } else{
+       return (<Redirect to="login"/>)
+    }
+  }}/>)
+}
 
 SecureRoute.propTypes = {
     loggedinUser: PropTypes.object.isRequired

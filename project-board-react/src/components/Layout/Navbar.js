@@ -11,11 +11,11 @@ class Navbar extends React.Component {
         localStorage.removeItem("jwtToken");
         setJWTToken(false);
         this.props.logoutUser();
-        window.location.href = "/";
+        window.location.href = '/';
+        
     }
     render() {
-    const {validToken, user} = this.props.loggedInUser;
-
+    
     const userIsAuthenticated = () => {
         
         return (
@@ -32,7 +32,7 @@ class Navbar extends React.Component {
                 <li className="nav-item">
                     <Link className="nav-link" to="/dashboard">
                         <i className="fas fa-user-circle mr-1"/> 
-                        {user.name}
+                        {this.props.loggedInUser.user.name}
                     </Link>
                 </li>
                 <li className="nav-item">
@@ -65,7 +65,7 @@ class Navbar extends React.Component {
         </div>);
     }
     let headerLink;
-    if(validToken && user){
+    if(this.props.loggedInUser.user.userId){
         headerLink = userIsAuthenticated() 
     } else {
         headerLink = userIsNotAuthenticated()
@@ -95,7 +95,7 @@ Navbar.propTypes = {
 }
 const mapStateToProps = state => {
     return {
-        loggedInUser: state.user,
+        loggedInUser: state.user
     }
 }
 const mapDispatchToProps = dispatchEvent => {

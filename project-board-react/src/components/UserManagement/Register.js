@@ -19,7 +19,7 @@ class Register extends Component {
     }
 
     componentDidMount() {
-        if (this.props.loggedInUser.validToken) {
+        if (this.props.loggedInUser.user.userId) {
             this.props.history.push("/dashboard");
         }
     }
@@ -81,7 +81,7 @@ Register.propTypes = {
 }
 const mapStateToProps = state => {
     return {
-        loggedInUser: state.user,
+        loggedInUser: state.user
     }
 }
 const mapDispatchToProps = dispatchEvent => {

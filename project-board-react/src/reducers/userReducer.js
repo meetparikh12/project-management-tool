@@ -1,16 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    user: {},
-    validToken: false
-}
-
-const booleanActionPayload = payload => {
-    if(payload){
-        return true
-    }else{
-        return false
-    }
+    user: {}
 }
 
 const userReducer = (state=initialState,action) => {
@@ -18,8 +9,7 @@ const userReducer = (state=initialState,action) => {
         case actionTypes.SET_CURRENT_USER:
             return {
                 ...state,
-                user: action.payload,
-                validToken: booleanActionPayload(action.payload)
+                user: action.payload
             }
 
         default: 

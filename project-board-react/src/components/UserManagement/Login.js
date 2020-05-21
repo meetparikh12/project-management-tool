@@ -21,7 +21,7 @@ class Login extends Component {
     }
 
     componentDidMount(){
-        if(this.props.loggedInUser.validToken){
+        if(this.props.loggedInUser.user.userId){
             this.props.history.push("/dashboard");
         }
     }
@@ -37,13 +37,7 @@ class Login extends Component {
             "email": this.state.email,
             "password": this.state.password
         }
-        this.props.loginRequest(user);
-    }
-
-    componentWillReceiveProps(nextProps){
-        if(nextProps.loggedInUser.validToken){
-            this.props.history.push("/dashboard");
-        }
+        this.props.loginRequest(user, this.props.history);
     }
 
     render() {
@@ -78,12 +72,12 @@ Login.propTypes = {
 }
 const mapStateToProps = state => {
     return {
-        loggedInUser : state.user,
+        loggedInUser : state.user
     }
 }
 const mapDispatchToProps = dispatchEvent => {
     return {
-        loginRequest: async (user) => {
+        loginRequest: async (user, history) => {
             try {
                 // post => Login request
                 const res = await axios.post("http://localhost:4200/api/users/login",user);
@@ -100,6 +94,7 @@ const mapDispatchToProps = dispatchEvent => {
                     type: SET_CURRENT_USER,
                     payload: decoded_token
                 });
+                history.push('/dashboard');
             } catch (error) {
                 toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
             }

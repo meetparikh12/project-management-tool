@@ -6,7 +6,7 @@ import { PropTypes } from 'prop-types';
 class Landing extends Component {
 
     componentDidMount() {
-        if (this.props.loggedInUser.validToken) {
+        if (this.props.loggedInUser.user.userId) {
             this.props.history.push("/dashboard");
         }
     }
@@ -43,7 +43,7 @@ Landing.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        loggedInUser: state.user,
+        loggedInUser: state.user
     }
 }
 export default connect(mapStateToProps,null)(Landing);
