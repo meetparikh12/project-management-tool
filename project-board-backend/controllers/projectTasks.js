@@ -1,9 +1,17 @@
 const Project = require('../models/Project');
 const ProjectTask = require('../models/ProjectTask');
 const ErrorHandling = require('../models/ErrorHandling');
+const {validationResult} = require('express-validator');
 const mongoose = require('mongoose');
 
 exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        let err = {};
+        err.message = errors.array();
+        err.status = 422;
+        return next(err);
+    }
     let {projectIdentifier} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
     let project;
@@ -26,7 +34,6 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
     // if(projectTask ){
     //     return next(new ErrorHandling(`Project Task already exist with ID: ${taskId}`, 404));
     // }
-
     try {
         await project.projectTask.forEach(projectTask => {
             if (projectTask.taskId === taskId) {
@@ -36,7 +43,6 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
     } catch (err) {
         return next(err);
     }
-
     const newPT = new ProjectTask({
         summary, acceptanceCriteria, dueDate, status, priority, taskId, project: projectIdentifier
     })
@@ -53,4 +59,8 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
         return next(new ErrorHandling('ProjectTask not added', 500))
     } 
     res.status(201).json({projectTask: newPT});
+}
+
+exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
+
 }
