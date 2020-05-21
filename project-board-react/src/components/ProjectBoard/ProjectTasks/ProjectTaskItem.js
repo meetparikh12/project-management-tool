@@ -10,16 +10,8 @@ class ProjectTaskItem extends Component {
     constructor(props) {
         super(props);
         this.deleteProjectTask = this.deleteProjectTask.bind(this);
-   //     this.getProjectTask = this.getProjectTask.bind(this);
     }
 
-    // getProjectTask(backlog_id,projectSequence){
-
-    //     axios.get(`/api/backlog/${backlog_id}/${projectSequence}`)
-    //     .then((res) => this.props.getProjectTask(res.data))
-    //     .catch((error) => console.log(error))
-
-    // }
     deleteProjectTask(backlog_id, projectSequence) {
 
         if(window.confirm(`You are deleting Project Task ${projectSequence} , this action cannot be undone.`))
@@ -39,11 +31,11 @@ class ProjectTaskItem extends Component {
         let priorityLevel;
         let priorityClass;
 
-        if(project_task.priority === 1) {
+        if(project_task.priority === "HIGH") {
             priorityLevel = "HIGH";
             priorityClass = "bg-danger text-light";
         } 
-        else if (project_task.priority === 2) {
+        else if (project_task.priority === "MEDIUM") {
             priorityLevel = "MEDIUM";
             priorityClass = "bg-warning text-light";
         } 
@@ -57,7 +49,7 @@ class ProjectTaskItem extends Component {
                 <div className="card mb-1 bg-light">
 
                     <div className={`card-header text-primary ${priorityClass}`}>
-                            ID: {project_task.projectSequence} -- Priority: {priorityLevel}
+                            ID: {project_task.taskId} -- Priority: {priorityLevel}
                     </div>
                     
                     <div className="card-body bg-light">
@@ -65,7 +57,7 @@ class ProjectTaskItem extends Component {
                         <p className="card-text text-truncate ">
                             {project_task.acceptanceCriteria}
                         </p>
-                        <Link to={`/updateProjectTask/${project_task.projectIdentifier}/${project_task.projectSequence}`} 
+                        <Link to={`/updateProjectTask/${project_task.project}/${project_task.taskId}`} 
                         className="btn btn-primary">
                             View / Update
                         </Link>

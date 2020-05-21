@@ -4,15 +4,14 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import {getProjectTasks} from '../../actions/actions';
 import PropTypes from 'prop-types';
-import { GET_ERRORS } from '../../actions/actionTypes';
-
+import { toast } from 'react-toastify';
+toast.configure();
 class Backlog extends Component {
     
     constructor(props){
         super(props);
         this.state = {
-            project_tasks: [],
-            errors: {}
+            project_tasks: []
         }
     }
 
@@ -27,16 +26,9 @@ class Backlog extends Component {
                 project_tasks: nextProps.projectTasks
             })
         }
-        if(nextProps.errors){
-            this.setState({
-                errors: nextProps.errors
-            })
-
-        }
     }
 
     render() {    
-        const { errors } = this.state;
         let ProjectBoardContent;
         let todoItems = [];
         let inProgressItems = [];
@@ -44,32 +36,23 @@ class Backlog extends Component {
         
         const projectBoardAlgo = (projectTasks) => {
             
-            if(projectTasks.length < 1) {
-                if(errors.projectNotFound) {
-                    return (
-                        <div className="alert alert-danger text-center" role="alert">{errors.projectNotFound}</div>
-                    );
-                } else if(errors.projectIdentifier) {
-                    return (
-                        <div className="alert alert-danger text-center" role="alert">{errors.projectIdentifier}</div>
-                    );
-                } else {
-                    return (
+            if(projectTasks.length === 0) {
+                return (
                         <div className="alert alert-info text-center" role="alert"> No project tasks to be displayed.</div>
                     );
-                }
+                
             } else {
                 const tasks = projectTasks.map((projectTask) => 
                     
-                    <ProjectTaskItem key={projectTask.id} project_task = {projectTask} />
+                    <ProjectTaskItem key={projectTask._id} project_task = {projectTask} />
                 );
 
                 for(let i=0; i<tasks.length; i++){
                     
-                    if(tasks[i].props.project_task.status === "TO_DO"){
+                    if(tasks[i].props.project_task.status === "TO DO"){
                         todoItems.push(tasks[i]);
                     }
-                    if (tasks[i].props.project_task.status === "IN_PROGRESS") {
+                    if (tasks[i].props.project_task.status === "IN PROGRESS") {
                         inProgressItems.push(tasks[i]);
                     }
                     if (tasks[i].props.project_task.status === "DONE") {
@@ -129,29 +112,24 @@ class Backlog extends Component {
 
 Backlog.propTypes = {
     getProjectTasks : PropTypes.func.isRequired,
-    projecTasks: PropTypes.object.isRequired
+    projectTasks: PropTypes.array.isRequired
 }
 
 const mapStateToProps = state => {
     return {
-        projectTasks :  state.getBacklogReducer.projectTasks,
-        errors: state.getErrorReducer.project_task_error
+        projectTasks: state.getBacklogReducer.projectTasks
     }
 }
 
 const mapDispatchToProps = dispatchEvent => {
     return {
         getProjectTasks : (backlog_id) => {
-            axios.get(`/api/backlog/${backlog_id}`)
+            axios.get(`http://localhost:4200/api/projects/projectTask/${backlog_id}`)
                 .then((res) => {
-                    dispatchEvent(getProjectTasks((res.data)));
+                    dispatchEvent(getProjectTasks((res.data.projectTasks)));
                 })
                 .catch((error) => {
-                    console.log(error)
-                    dispatchEvent({
-                        type: GET_ERRORS,
-                        payload: error.response.data
-                    })
+                    toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
                 })
         }
     }

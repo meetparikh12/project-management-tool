@@ -32,7 +32,7 @@ class Navbar extends React.Component {
                 <li className="nav-item">
                     <Link className="nav-link" to="/dashboard">
                         <i className="fas fa-user-circle mr-1"/> 
-                        {user.fullName}
+                        {user.name}
                     </Link>
                 </li>
                 <li className="nav-item">
