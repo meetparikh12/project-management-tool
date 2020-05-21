@@ -11,7 +11,6 @@ class Navbar extends React.Component {
         localStorage.removeItem("jwtToken");
         setJWTToken(false);
         this.props.logoutUser();
-        window.location.href = '/';
         
     }
     render() {
