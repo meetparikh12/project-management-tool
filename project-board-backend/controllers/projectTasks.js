@@ -5,6 +5,7 @@ const {validationResult} = require('express-validator');
 const mongoose = require('mongoose');
 
 exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
+
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         let err = {};
@@ -59,8 +60,31 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
         return next(new ErrorHandling('ProjectTask not added', 500))
     } 
     res.status(201).json({projectTask: newPT});
+    
 }
 
 exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
+
+    let {projectIdentifier} = req.params;
+    projectIdentifier = projectIdentifier.toUpperCase();
+    let project;
+    try{
+        project = await Project.findOne({projectIdentifier: projectIdentifier});
+    } catch(err) {
+        return next(new ErrorHandling('Project not fetched!', 500));
+    }
+    if(!project) {
+        return next(new ErrorHandling(`Project not found with ID ${projectIdentifier}`, 404));
+    }
+    let projectTasks;
+    try {
+        projectTasks = await ProjectTask.find({project: projectIdentifier});
+    }catch(err) {
+        return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
+    }
+    if(!projectTasks || projectTasks.length === 0){
+        return next(new ErrorHandling(`Project Tasks not found for Project ID ${projectIdentifier}`, 404));
+    }
+    res.status(200).json({projectTasks});
 
 }

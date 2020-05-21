@@ -9,4 +9,6 @@ route.post('/:projectIdentifier',  [
     body('taskId').trim().isLength({min:4, max: 5}).withMessage('Task ID must be between 4 to 5 characters.')
 ] ,projectTaskController.CREATE_PROJECT_TASK);
 
+route.get('/:projectIdentifier', projectTaskController.GET_ALL_PROJECT_TASKS);
+
 module.exports = route;
