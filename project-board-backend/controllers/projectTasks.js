@@ -126,3 +126,100 @@ exports.GET_SINGLE_PROJECT_TASK = async (req,res,next)=> {
     res.status(200).json({projectTask});
 
 }
+
+exports.UPDATE_PROJECT_TASK = async (req,res,next)=> {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        let err = {};
+        err.message = errors.array();
+        err.status = 422;
+        return next(err);
+    }
+
+    let {projectIdentifier, taskId} = req.params;
+    projectIdentifier = projectIdentifier.toUpperCase();
+    let project;
+    try {
+        project = await Project.findOne({projectIdentifier});
+    } catch(err) {
+        return next(new ErrorHandling('Project not fetched!', 500));
+    } 
+
+    if(!project) {
+        return next(new ErrorHandling(`Project not found with ID '${projectIdentifier}'`, 404));
+    }
+    let projectTask;
+
+    try {
+        projectTask = await ProjectTask.findOne({taskId: taskId}) ;
+        
+    } catch(err) {
+        console.log(err);
+        return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
+    }
+
+    if(!projectTask){
+        return next(new ErrorHandling(`Project Task '${taskId}' does not exist`, 404));
+    }
+    if(projectTask.project !== projectIdentifier){
+        return next(new ErrorHandling(`Project Task '${taskId}' does not exist in Project with ID '${projectIdentifier}'`, 404));
+    }
+    const {summary, acceptanceCriteria, dueDate, status, priority} = req.body;
+    projectTask.summary = summary;
+    projectTask.acceptanceCriteria = acceptanceCriteria;
+    projectTask.dueDate = dueDate;
+    projectTask.status = status;
+    projectTask.priority = priority;
+
+    try {
+        await projectTask.save();
+    } catch(err) {
+        return next(new ErrorHandling('Project Task not updated', 500));
+    } 
+
+    res.status(200).json({message: 'Project Task updated'});
+}
+
+exports.DELETE_PROJECT_TASK = async (req,res,next)=> {
+    let {projectIdentifier, taskId} = req.params;
+    projectIdentifier = projectIdentifier.toUpperCase();
+    let project;
+    try {
+        project = await Project.findOne({projectIdentifier});
+    } catch(err) {
+        return next(new ErrorHandling('Project not fetched!', 500));
+    } 
+
+    if(!project) {
+        return next(new ErrorHandling(`Project not found with ID '${projectIdentifier}'`, 404));
+    }
+    let projectTask;
+
+    try {
+        projectTask = await ProjectTask.findOne({taskId: taskId}) ;
+        
+    } catch(err) {
+        console.log(err);
+        return next(new ErrorHandling('Cannot fetch ProjectTask', 500));
+    }
+
+    if(!projectTask){
+        return next(new ErrorHandling(`Project Task '${taskId}' does not exist`, 404));
+    }
+    if(projectTask.project !== projectIdentifier){
+        return next(new ErrorHandling(`Project Task '${taskId}' does not exist in Project with ID '${projectIdentifier}'`, 404));
+    }
+    
+    try {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await projectTask.remove({session});
+        await project.projectTask.pull(projectTask);
+        await project.save({session});
+        await session.commitTransaction();
+    }catch(err){
+        return next(new ErrorHandling('Project Task not deleted', 500));
+    }
+    res.status(200).json({message: 'Project Task deleted successfully.'})
+}

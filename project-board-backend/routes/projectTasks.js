@@ -13,4 +13,11 @@ route.get('/:projectIdentifier', projectTaskController.GET_ALL_PROJECT_TASKS);
 
 route.get('/:projectIdentifier/:taskId', projectTaskController.GET_SINGLE_PROJECT_TASK);
 
+route.patch('/:projectIdentifier/:taskId',[
+    body('summary').trim().isLength({min: 5}).withMessage('Task summary must be 5 characters long.'),
+    body('acceptanceCriteria').trim().isLength({min: 10}).withMessage('Acceptance Criteria must be 10 characters long.')
+] ,projectTaskController.UPDATE_PROJECT_TASK);
+
+route.delete('/:projectIdentifier/:taskId', projectTaskController.DELETE_PROJECT_TASK);
+
 module.exports = route;
