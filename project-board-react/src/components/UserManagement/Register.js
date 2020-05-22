@@ -90,6 +90,9 @@ const mapDispatchToProps = dispatchEvent => {
                 axios
                 .post("http://localhost:4200/api/users/register",newUser)
                 .then((res)=> {
+                    toast.success(res.data.message, {
+                        position: toast.POSITION.BOTTOM_RIGHT
+                    });
                     history.push("/login");
                 })
                 .catch((error) => {

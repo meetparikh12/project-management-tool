@@ -2,8 +2,9 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import { connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import { SET_CURRENT_USER } from '../../actions/actionTypes';
+import { SET_CURRENT_USER, GET_PROJECTS, GET_PROJECT_TASKS } from '../../actions/actionTypes';
 import setJWTToken from "../../securityUtils/setJWTToken";
+import store from '../../store';
 
 class Navbar extends React.Component {
     
@@ -11,7 +12,11 @@ class Navbar extends React.Component {
         localStorage.removeItem("jwtToken");
         setJWTToken(false);
         this.props.logoutUser();
-        
+        store.dispatch({
+           type: GET_PROJECTS,payload: []
+          
+        })
+        store.dispatch({type: GET_PROJECT_TASKS, payload: []})
     }
     render() {
     
@@ -100,12 +105,13 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatchEvent => {
     return {
         logoutUser: () => {
-            dispatchEvent({
-                type: SET_CURRENT_USER,
-                payload: {}
-            });
+           
+                dispatchEvent({type: SET_CURRENT_USER,payload: {}})
+                
+            
         }
     }
 }
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(Navbar);

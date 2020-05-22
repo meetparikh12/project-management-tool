@@ -27,7 +27,7 @@ const backlogReducer = (state = initialState, action) => {
             }
         default: 
             return {
-                state
+                ...state
             }
     }
 

@@ -25,10 +25,7 @@ const projectReducer = (state=initialState, action) => {
                 ...state,
                 currentProject: action.payload
             }
-        default:
-            return {
-                ...state
-            }
+        default: return state
         }
 }
 
