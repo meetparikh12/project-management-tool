@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import {toast} from 'react-toastify';
+import {trackPromise} from 'react-promise-tracker';
 toast.configure();
 class AddProject extends Component {
     constructor(props){
@@ -10,7 +11,8 @@ class AddProject extends Component {
             projectIdentifier: '',
             projectDescription: '',
             start_date: '',
-            end_date: ''
+            end_date: '',
+            isBtnDisabled: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -25,6 +27,7 @@ class AddProject extends Component {
 
     onSubmit(e){
         e.preventDefault();
+        this.setState({isBtnDisabled: !this.state.isBtnDisabled});
         const newProject = {
             "projectName" : this.state.projectName,
             "projectIdentifier" : this.state.projectIdentifier,
@@ -32,7 +35,7 @@ class AddProject extends Component {
             "startDate" : this.state.start_date,
             "endDate" : this.state.end_date
         }
-
+        trackPromise(
         axios
         .post("http://localhost:4200/api/projects",newProject)
         .then((res) => {
@@ -41,9 +44,10 @@ class AddProject extends Component {
         
         })
         .catch((error) => {
+            this.setState({isBtnDisabled: !this.state.isBtnDisabled});
             toast.error(error.response.data.message[0].msg || error.response.data.message, 
                 {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
-        })
+        }))
     
     }
 
@@ -77,7 +81,7 @@ class AddProject extends Component {
                                         <input type="date" className="form-control form-control-lg" name="end_date" onChange={this.onChange} value={this.state.end_date}/>
                                     </div>
 
-                                    <input type="submit" value="Add Project" className="btn btn-primary btn-block mt-4" />
+                                    <input type="submit" disabled={this.state.isBtnDisabled} value="Add Project" className="btn btn-primary btn-block mt-4" />
                                 </form>
                             </div>
                         </div>

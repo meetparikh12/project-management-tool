@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { deleteProject, getProjectById } from '../../actions/actions';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import {trackPromise} from 'react-promise-tracker';
 class ProjectItem extends Component {
     
     constructor(props){
@@ -13,17 +14,19 @@ class ProjectItem extends Component {
     }
 
     getProject(id){
+        trackPromise(
         axios
         .get(`http://localhost:4200/api/projects/${id}`)
         .then((res)=> {
             this.props.getProjectById(res.data.project);
         })
-        .catch((error) => console.log(error.response.data));
+        .catch((error) => console.log(error.response.data)));
     }
 
     deleteProject(projectID){
 
         if(window.confirm(`You are deleting Project with ID '${projectID}' , this action cannot be undone.`)) {
+            trackPromise(
             axios
             .delete(`http://localhost:4200/api/projects/${projectID}`)
             .then((res) => {
@@ -31,7 +34,7 @@ class ProjectItem extends Component {
             })
             .catch((error) => {
                 toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000})
-            })
+            }))
         }
     }
 

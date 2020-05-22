@@ -5,6 +5,7 @@ import axios from 'axios';
 import PropTypes from "prop-types";
 import { getProjectTask } from '../../../actions/actions';
 import { toast } from 'react-toastify';
+import { trackPromise } from "react-promise-tracker";
 
 class UpdateProjectTask extends Component {
 
@@ -17,7 +18,8 @@ class UpdateProjectTask extends Component {
             acceptanceCriteria: "",
             dueDate: "",
             priority: "",
-            status: ""
+            status: "",
+            isBtnDisabled: false
         }
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -46,6 +48,7 @@ class UpdateProjectTask extends Component {
 
     onSubmit(e){
         e.preventDefault();
+        this.setState({isBtnDisabled: !this.state.isBtnDisabled});
         const updateProjectTask = {
             "summary": this.state.summary,
             "acceptanceCriteria": this.state.acceptanceCriteria,
@@ -53,8 +56,19 @@ class UpdateProjectTask extends Component {
             "priority": this.state.priority,
             "status": this.state.status
         }
-
-        this.props.updateProjectTask(updateProjectTask,this.state.projectIdentifier, this.state.taskId, this.props.history);
+        trackPromise(
+            axios
+            .patch(`http://localhost:4200/api/projects/projectTask/${this.state.projectIdentifier}/${this.state.taskId}`, updateProjectTask)
+            .then((res) => {
+                this.props.history.push(`/projectboard/${this.state.projectIdentifier}`);
+            })
+            .catch((error) => {
+                this.setState({isBtnDisabled: !this.state.isBtnDisabled})
+                console.log(error);
+                toast.error(error.response.data.message[0].msg || error.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT
+                })
+            }))
     }
 
     onChange(e){
@@ -111,7 +125,7 @@ class UpdateProjectTask extends Component {
                                         <option value="DONE">DONE</option>
                                     </select>
                                 </div>
-                                <input type="submit" className="btn btn-primary btn-block mt-4" />
+                                <input type="submit" disabled={this.state.isBtnDisabled} value="Update Project Task" className="btn btn-primary btn-block mt-4" />
                             </form>
                         </div>
                     </div>
@@ -123,7 +137,6 @@ class UpdateProjectTask extends Component {
 
 UpdateProjectTask.propTypes = {
 
-    updateProjectTask: PropTypes.func.isRequired,
     currentTask : PropTypes.object.isRequired,
     getProjectTask: PropTypes.func.isRequired
 
@@ -137,25 +150,14 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatchEvent => {
     return {
-        updateProjectTask : (projectTask, backlog_id, taskId, history) => {
-            axios.patch(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${taskId}`, projectTask)
-                .then((res) => {
-                    history.push(`/projectboard/${backlog_id}`);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    toast.error(error.response.data.message[0].msg || error.response.data.message, {
-                    position: toast.POSITION.BOTTOM_RIGHT
-                    })
-                })
-        },
         getProjectTask: (backlog_id, taskId, history) => {
+            trackPromise(
               axios.get(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${taskId}`)
                   .then((res) => dispatchEvent(getProjectTask(res.data.projectTask)))
                   .catch((error) => {
                       toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
                       history.push("/dashboard");
-                    })
+                    }))
           }
     }
 }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { trackPromise } from "react-promise-tracker";
 toast.configure();
 class UpdateProject extends Component {
     
@@ -13,8 +14,8 @@ class UpdateProject extends Component {
             endDate:" ",
             projectName:"",
             projectDescription:"",
-            //projectLeader:"",
-            projectIdentifier: ""
+            projectIdentifier: "",
+            isBtnDisabled: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -27,8 +28,7 @@ class UpdateProject extends Component {
                 projectIdentifier: nextProps.current_project.projectIdentifier,
                 projectDescription: nextProps.current_project.projectDescription,
                 startDate: nextProps.current_project.startDate,
-                endDate: nextProps.current_project.endDate,
-                //projectLeader: nextProps.current_project.projectLeader
+                endDate: nextProps.current_project.endDate
             })
         }
     }
@@ -41,14 +41,26 @@ class UpdateProject extends Component {
 
     onSubmit(e){
         e.preventDefault();
+        this.setState({isBtnDisabled: !this.state.isBtnDisabled});
         const updatedProject = {
             "projectName": this.state.projectName,
             "projectDescription": this.state.projectDescription,
             "startDate": this.state.startDate,
             "endDate": this.state.endDate,
-            //"projectLeader": this.state.projectLeader
         }
-      this.props.updateProject(updatedProject, this.state.projectIdentifier,this.props.history);
+      trackPromise(
+          axios
+          .patch(`http://localhost:4200/api/projects/${this.state.projectIdentifier}`, updatedProject)
+          .then((res) => {
+              this.props.history.push("/dashboard");
+          })
+          .catch((error) => {
+              this.setState({isBtnDisabled: !this.state.isBtnDisabled});
+              toast.error(error.response.data.message[0].msg || error.response.data.message, {
+                  position: toast.POSITION.BOTTOM_RIGHT,
+                  autoClose: 2000
+              });
+          }))
     }
 
     render() {
@@ -60,7 +72,7 @@ class UpdateProject extends Component {
                             <div className="col-md-8 m-auto">
                                 <h5 className="display-4 text-center">Create / Edit Project form</h5>
                                 <hr />
-                                <form onSubmit = {this.onSubmit} >
+                                <form onSubmit = {this.onSubmit}>
                                     <div className="form-group">
                                         <input type="text" className="form-control form-control-lg" 
                                         name="projectName" onChange = {this.onChange} value = {this.state.projectName} placeholder="Project Name" />
@@ -85,7 +97,7 @@ class UpdateProject extends Component {
                                         name="endDate"  onChange = {this.onChange} value = {this.state.endDate} />
                                     </div>
 
-                                    <input type="submit" value="Update Project" className="btn btn-primary btn-block mt-4" />
+                                    <input type="submit" disabled={this.state.isBtnDisabled} value="Update Project" className="btn btn-primary btn-block mt-4" />
                                 </form>
                             </div>
                         </div>
@@ -96,8 +108,7 @@ class UpdateProject extends Component {
     }
 }
 UpdateProject.propTypes = {
-    current_project : PropTypes.object.isRequired,
-    updateProject : PropTypes.func.isRequired
+    current_project : PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => {
@@ -106,22 +117,4 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = dispatchEvent => {
-    return {
-        updateProject : (project,projectId,history) => {
-            axios
-                .patch(`http://localhost:4200/api/projects/${projectId}`, project)
-                .then((res) => {
-                    history.push("/dashboard");
-                })
-                .catch((error) => {
-                    toast.error(error.response.data.message[0].msg || error.response.data.message, {
-                        position: toast.POSITION.BOTTOM_RIGHT,
-                        autoClose: 2000
-                    });
-                })
-        }
-    }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(UpdateProject);
+export default connect(mapStateToProps,null)(UpdateProject);

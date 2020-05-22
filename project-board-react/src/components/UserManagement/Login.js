@@ -7,14 +7,15 @@ import setJWTToken from '../../securityUtils/setJWTToken'
 import { SET_CURRENT_USER } from '../../actions/actionTypes';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import {trackPromise} from 'react-promise-tracker';
 toast.configure();
 class Login extends Component {
     constructor(props){
         super(props);
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            isBtnDisabled: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -33,11 +34,31 @@ class Login extends Component {
     }
     onSubmit(e){
         e.preventDefault();
+        this.setState({isBtnDisabled: !this.state.isBtnDisabled})
         const user = {
             "email": this.state.email,
             "password": this.state.password
         }
-        this.props.loginRequest(user, this.props.history);
+        // post => Login request
+        trackPromise(
+        axios.post("http://localhost:4200/api/users/login",user)
+        .then((res) => {
+        // extract token from res.data
+        const {token} = res.data;
+        // store token in local storage
+        localStorage.setItem("jwtToken",token);
+        // set token in header
+        setJWTToken(token);
+        //decode token on React
+        const decoded_token = jwt_decode(token);
+        //dispatch to our UserReducer
+        this.props.setUserInfo(decoded_token, this.props.history);
+        })
+        .catch((error) => {
+            console.log(error);                
+            this.setState({isBtnDisabled: !this.state.isBtnDisabled})
+            toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
+        }))
     }
 
     render() {
@@ -56,7 +77,7 @@ class Login extends Component {
                                     <input type="password" className="form-control form-control-lg" placeholder="Password" name="password" 
                                         onChange={this.onChange} value={this.state.password} />
                                 </div>
-                                <input type="submit" value="Login" className="btn btn-info btn-block mt-4" />
+                                <input type="submit" disabled = {this.state.isBtnDisabled} value="Login" className="btn btn-info btn-block mt-4" />
                             </form>
                         </div>
                     </div>
@@ -67,7 +88,6 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    loginRequest: PropTypes.func.isRequired,
     loggedInUser: PropTypes.object.isRequired
 }
 const mapStateToProps = state => {
@@ -77,28 +97,13 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatchEvent => {
     return {
-        loginRequest: async (user, history) => {
-            try {
-                // post => Login request
-                const res = await axios.post("http://localhost:4200/api/users/login",user);
-                // extract token from res.data
-                const {token} = res.data;
-                // store token in local storage
-                localStorage.setItem("jwtToken",token);
-                // set token in header
-                setJWTToken(token);
-                //decode token on React
-                const decoded_token = jwt_decode(token);
-                //dispatch to our UserReducer
-                dispatchEvent({
-                    type: SET_CURRENT_USER,
-                    payload: decoded_token
-                });
-                history.push('/dashboard');
-            } catch (error) {
-                toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
-            }
-        } 
+        setUserInfo: (userInfo, history) => {
+            dispatchEvent({
+                type: SET_CURRENT_USER,
+                payload: userInfo
+            });
+            history.push('/dashboard');
+        }
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

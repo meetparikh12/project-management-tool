@@ -5,6 +5,8 @@ import axios from 'axios';
 import {getProjectTasks} from '../../actions/actions';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { trackPromise } from "react-promise-tracker";
+
 toast.configure();
 class Backlog extends Component {
     
@@ -124,13 +126,14 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatchEvent => {
     return {
         getProjectTasks : (backlog_id) => {
+            trackPromise(
             axios.get(`http://localhost:4200/api/projects/projectTask/${backlog_id}`)
                 .then((res) => {
                     dispatchEvent(getProjectTasks((res.data.projectTasks)));
                 })
                 .catch((error) => {
                     toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-                })
+                }));
         }
     }
 }

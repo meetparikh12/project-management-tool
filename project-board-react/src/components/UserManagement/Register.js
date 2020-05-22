@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import { PropTypes } from 'prop-types';
 import { toast } from 'react-toastify';
+import {trackPromise} from 'react-promise-tracker';
 
 class Register extends Component {
 
@@ -12,7 +13,8 @@ class Register extends Component {
             email:"",
             name:"",
             password:"",
-            confirmPassword:""
+            confirmPassword:"",
+            isBtnDisabled: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -32,13 +34,31 @@ class Register extends Component {
 
     onSubmit(e){
         e.preventDefault();
+        this.setState({
+            isBtnDisabled: !this.state.isBtnDisabled
+        })
         const newUser = {
             "name": this.state.name,
             "email": this.state.email,
             "password": this.state.password,
             "confirmPassword": this.state.confirmPassword
         }
-        this.props.createNewUser(newUser,this.props.history);
+        trackPromise(
+            axios
+            .post("http://localhost:4200/api/users/register",newUser)
+            .then((res)=> {
+                toast.success(res.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                this.props.history.push("/login");
+            })
+            .catch((error) => {
+                this.setState({
+                    isBtnDisabled: !this.state.isBtnDisabled
+                })
+                toast.error(error.response.data.message[0].msg || error.response.data.message, 
+                    {position: toast.POSITION.BOTTOM_RIGHT});
+            }))
     }
 
     render() {
@@ -64,7 +84,7 @@ class Register extends Component {
                                 <div className="form-group">
                                     <input type="password" value={this.state.confirmPassword} onChange= {this.onChange}  placeholder="Confirm Password" name="confirmPassword" className="form-control form-control-lg"/>
                                 </div>
-                                <input type="submit" value="Sign up" className="btn btn-info btn-block mt-4" />
+                                <input type="submit" disabled= {this.state.isBtnDisabled} value="Sign up" className="btn btn-info btn-block mt-4" />
                             </form>
                         </div>
                     </div>
@@ -75,7 +95,6 @@ class Register extends Component {
 }
 
 Register.propTypes = {
-    createNewUser : PropTypes.func.isRequired,
     loggedInUser: PropTypes.object.isRequired
 
 }
@@ -84,22 +103,5 @@ const mapStateToProps = state => {
         loggedInUser: state.user
     }
 }
-const mapDispatchToProps = dispatchEvent => {
-    return {
-        createNewUser : (newUser,history) => {
-                axios
-                .post("http://localhost:4200/api/users/register",newUser)
-                .then((res)=> {
-                    toast.success(res.data.message, {
-                        position: toast.POSITION.BOTTOM_RIGHT
-                    });
-                    history.push("/login");
-                })
-                .catch((error) => {
-                    toast.error(error.response.data.message[0].msg || error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
-                })
-        }
-    }
-}
 
-export default connect(mapStateToProps,mapDispatchToProps)(Register);
+export default connect(mapStateToProps,null)(Register);

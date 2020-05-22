@@ -5,15 +5,15 @@ import axios from 'axios';
 import { getProjects } from '../actions/actions';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
-
+import {trackPromise} from 'react-promise-tracker';
 class Dashboard extends Component {
   
     componentDidMount(){
-        
+        trackPromise(
         axios
         .get("http://localhost:4200/api/projects")
         .then((res) => this.props.getProjects(res.data.projects))
-        .catch((error) => console.log(error))
+        .catch((error) => console.log(error)))
     }
 
     render() {
