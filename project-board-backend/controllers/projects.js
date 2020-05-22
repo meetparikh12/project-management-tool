@@ -132,10 +132,19 @@ exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
 }
 
 exports.DELETE_PROJECT = async(req,res,next)=> {
+    let user; 
+    try {
+        user = await User.findOne({_id: req.userId})
+    }catch(err){
+        return next(new ErrorHandling('User not fetched', 500))
+    }
+    if(!user){
+        return next(new ErrorHandling('User not found', 404));
+    }
     const {projectIdentifier} = req.params;
     let project;
     try {
-        project = await Project.findOne({projectIdentifier: projectIdentifier.toUpperCase()}).populate('projectLeader');
+        project = await Project.findOne({projectIdentifier: projectIdentifier.toUpperCase()}).populate('projectTask');
     } catch(err){
         return next(new ErrorHandling('Project not fetched', 500))
     } 
@@ -148,11 +157,13 @@ exports.DELETE_PROJECT = async(req,res,next)=> {
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
+        await project.projectTask.map((projectTask)=> projectTask.remove());
         await project.remove({session});
-        await project.projectLeader.projects.pull(project);
-        await project.projectLeader.save({session});
+        await user.projects.pull(project);
+        await user.save({session});
         await session.commitTransaction();
     }catch(err){
+        console.log(err);
         return next(new ErrorHandling('Project not deleted', 500))
     }
     res.status(200).json({message: 'Project deleted Successfully!'})
