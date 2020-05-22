@@ -3,6 +3,7 @@ const ProjectTask = require('../models/ProjectTask');
 const ErrorHandling = require('../models/ErrorHandling');
 const {validationResult} = require('express-validator');
 const mongoose = require('mongoose');
+const User = require('../models/User');
 
 exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
 
@@ -13,11 +14,22 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
         err.status = 422;
         return next(err);
     }
+    
+    let user;
+    try {
+        user = await User.findOne({_id: req.userId}).populate('projects');
+    }catch(err) {
+        return next(new ErrorHandling('User not fetched', 500));
+    } 
+    if(!user){
+        return next(new ErrorHandling('User not found', 404))
+    }
+
     let {projectIdentifier} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
     let project;
     try {
-        project = await Project.findOne({projectIdentifier: projectIdentifier}).populate('projectTask');
+        project = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
     } catch(err){
         console.log(err);
         return next(new ErrorHandling('Cannot fetch Project', 500));
@@ -76,11 +88,22 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
 
 exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
 
+    let user;
+    try {
+        user = await User.findOne({_id: req.userId}).populate('projects');
+    }catch(err) {
+        return next(new ErrorHandling('User not fetched', 500));
+    } 
+    if(!user){
+        return next(new ErrorHandling('User not found', 404))
+    }
+
     let {projectIdentifier} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
     let project;
+
     try{
-        project = await Project.findOne({projectIdentifier: projectIdentifier});
+        project = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
     } catch(err) {
         return next(new ErrorHandling('Project not fetched!', 500));
     }
@@ -101,11 +124,21 @@ exports.GET_ALL_PROJECT_TASKS = async (req,res,next)=> {
 }
 
 exports.GET_SINGLE_PROJECT_TASK = async (req,res,next)=> {
+    let user;
+    try {
+        user = await User.findOne({_id: req.userId}).populate('projects');
+    }catch(err) {
+        return next(new ErrorHandling('User not fetched', 500));
+    } 
+    if(!user){
+        return next(new ErrorHandling('User not found', 404))
+    }
+
     let {projectIdentifier, taskId} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
     let project;
     try {
-        project = await Project.findOne({projectIdentifier});
+        project = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
     } catch(err) {
         return next(new ErrorHandling('Project not fetched!', 500));
     } 
@@ -143,12 +176,21 @@ exports.UPDATE_PROJECT_TASK = async (req,res,next)=> {
         err.status = 422;
         return next(err);
     }
+    let user;
+    try {
+        user = await User.findOne({_id: req.userId}).populate('projects');
+    }catch(err) {
+        return next(new ErrorHandling('User not fetched', 500));
+    } 
+    if(!user){
+        return next(new ErrorHandling('User not found', 404))
+    }
 
     let {projectIdentifier, taskId} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
     let project;
     try {
-        project = await Project.findOne({projectIdentifier});
+        project = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
     } catch(err) {
         return next(new ErrorHandling('Project not fetched!', 500));
     } 
@@ -205,11 +247,21 @@ exports.UPDATE_PROJECT_TASK = async (req,res,next)=> {
 }
 
 exports.DELETE_PROJECT_TASK = async (req,res,next)=> {
+    let user;
+    try {
+        user = await User.findOne({_id: req.userId}).populate('projects');
+    }catch(err) {
+        return next(new ErrorHandling('User not fetched', 500));
+    } 
+    if(!user){
+        return next(new ErrorHandling('User not found', 404))
+    }
+
     let {projectIdentifier, taskId} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
     let project;
     try {
-        project = await Project.findOne({projectIdentifier});
+        project = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
     } catch(err) {
         return next(new ErrorHandling('Project not fetched!', 500));
     } 
