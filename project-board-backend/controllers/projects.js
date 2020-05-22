@@ -17,8 +17,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
         projectIdentifier,
         projectDescription,
         startDate,
-        endDate,
-        projectLeader
+        endDate
     } = req.body;
     let project;
     try {
@@ -33,7 +32,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
     }
     let user;
     try {
-        user = await User.findOne({_id: req.body.projectLeader});
+        user = await User.findOne({_id: req.userId});
     } catch(err){
         return next(new ErrorHandling('Cannot fetch user!', 500));
     }
@@ -46,7 +45,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
         projectDescription,
         startDate,
         endDate, 
-        projectLeader
+        projectLeader: req.userId
     });
     // if (project.projectLeader._id.toString() !== req.userId) {
     //     return next(new ErrorHandling('Not Authorized', 401));
@@ -70,13 +69,14 @@ exports.CREATE_PROJECT = async (req, res, next) => {
 exports.GET_ALL_PROJECTS = async (req,res,next)=> {
     let projects;
     try {
-        projects = await Project.find();
+        projects = await Project.find({projectLeader: req.userId});
     } catch(err) {
         return next(new ErrorHandling('Projects not fetched', 500))
     }
     if(projects.length===0){
         return next(new ErrorHandling('No Projects found', 404))
-    }
+    }   
+
     res.status(200).json({projects});
 }
 
@@ -92,6 +92,9 @@ exports.GET_SINGLE_PROJECT = async (req,res,next) => {
     } 
     if(!project){
         return next(new ErrorHandling('No Project found', 404))
+    }
+    if(project.projectLeader.toString() !== req.userId){
+        return next(new ErrorHandling('Not Authorized', 401))
     }
 
     res.status(200).json({project});
@@ -115,7 +118,7 @@ exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
     if(!project) {
         return next(new ErrorHandling(`Project not found with ID: ${projectIdentifier}`, 404))
     }
-    if(project.projectLeader.toString() !== req.body.projectLeader){
+    if(project.projectLeader.toString() !== req.userId){
         return next(new ErrorHandling('Not Authorized', 401));
     }
     const {projectName, projectDescription, startDate, endDate} = req.body;
@@ -142,7 +145,7 @@ exports.DELETE_PROJECT = async(req,res,next)=> {
     if(!project){
         return next(new ErrorHandling(`Project not found with ID: ${projectIdentifier}`, 404))
     }
-    if(project.projectLeader._id.toString() !== req.body.projectLeader) {
+    if(project.projectLeader._id.toString() !== req.userId) {
         return next(new ErrorHandling('Not Authorized', 401));
     }
     try {

@@ -39,15 +39,6 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
         return next(new ErrorHandling(`Project Task with ID '${taskId}' already exist`, 404));
     }
 
-    // try {
-    //     await project.projectTask.forEach(projectTask => {
-    //         if (projectTask.taskId === taskId) {
-    //             throw new ErrorHandling(`Project Task ${taskId} already exist in Project ID: ${projectIdentifier}`, 404);
-    //         }
-    //     });
-    // } catch (err) {
-    //     return next(err);
-    // }
     projectTask = new ProjectTask({
         summary, acceptanceCriteria, dueDate, status, priority, taskId, project: projectIdentifier
     })

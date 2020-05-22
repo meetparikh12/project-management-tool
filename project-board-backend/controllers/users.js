@@ -53,7 +53,7 @@ exports.SIGNUP_USER = async (req, res, next) => {
     }
 
     res.status(201).json({
-        user
+        message: 'Registered Successfully.'
     })
 }
 
