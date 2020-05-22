@@ -25,7 +25,7 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
     if(!project){
         return next(new ErrorHandling(`Project not found with ID '${projectIdentifier}'`, 404));
     } 
-    const { summary, acceptanceCriteria, dueDate, status, priority, taskId} = req.body;
+    let { summary, acceptanceCriteria, dueDate, status, priority, taskId} = req.body;
     let projectTask;
 
     try {
@@ -38,10 +38,26 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
     if(projectTask){
         return next(new ErrorHandling(`Project Task with ID '${taskId}' already exist`, 404));
     }
-
+    const statusCheck = {
+        "TO DO": "TO DO",
+        "IN PROGRESS": "IN PROGRESS", 
+        "DONE" : "DONE"
+    }
+    const priorityCheck = {
+        "LOW": "LOW",
+        "MEDIUM": "MEDIUM",
+        "HIGH": "HIGH"
+    }
+    if(!(!!statusCheck[status])){
+        status = "TO DO"
+    } 
+    if(!(!!priorityCheck[priority])){
+        priority = "LOW"
+    }
     projectTask = new ProjectTask({
         summary, acceptanceCriteria, dueDate, status, priority, taskId, project: projectIdentifier
     })
+
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -156,7 +172,23 @@ exports.UPDATE_PROJECT_TASK = async (req,res,next)=> {
     if(projectTask.project !== projectIdentifier){
         return next(new ErrorHandling(`Project Task '${taskId}' does not exist in Project with ID '${projectIdentifier}'`, 404));
     }
-    const {summary, acceptanceCriteria, dueDate, status, priority} = req.body;
+    let {summary, acceptanceCriteria, dueDate, status, priority} = req.body;
+    const statusCheck = {
+        "TO DO": "TO DO",
+        "IN PROGRESS": "IN PROGRESS",
+        "DONE": "DONE"
+    }
+    const priorityCheck = {
+        "LOW": "LOW",
+        "MEDIUM": "MEDIUM",
+        "HIGH": "HIGH"
+    }
+    if (!(!!statusCheck[status])) {
+        status = "TO DO"
+    }
+    if (!(!!priorityCheck[priority])) {
+        priority = "LOW"
+    }
     projectTask.summary = summary;
     projectTask.acceptanceCriteria = acceptanceCriteria;
     projectTask.dueDate = dueDate;

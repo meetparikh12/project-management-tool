@@ -47,9 +47,6 @@ exports.CREATE_PROJECT = async (req, res, next) => {
         endDate, 
         projectLeader: req.userId
     });
-    // if (project.projectLeader._id.toString() !== req.userId) {
-    //     return next(new ErrorHandling('Not Authorized', 401));
-    // }
     try {
         const session = await mongoose.startSession();
         session.startTransaction();
