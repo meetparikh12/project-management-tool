@@ -24,7 +24,13 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ProjectTask',
         required: true
-    }]
+    }], 
+
+    projectLeader: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 }, {timestamps: true})
 
 module.exports = mongoose.model('Project', projectSchema);

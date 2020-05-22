@@ -1,6 +1,8 @@
 const Project = require('../models/Project');
 const ErrorHandling = require("../models/ErrorHandling");
 const {validationResult} = require('express-validator');
+const User = require('../models/User');
+const mongoose = require('mongoose');
 
 exports.CREATE_PROJECT = async (req, res, next) => {
     const error = validationResult(req);
@@ -15,29 +17,48 @@ exports.CREATE_PROJECT = async (req, res, next) => {
         projectIdentifier,
         projectDescription,
         startDate,
-        endDate
+        endDate,
+        projectLeader
     } = req.body;
     let project;
     try {
         project = await Project.findOne({
             projectIdentifier: projectIdentifier.toUpperCase()
-        });
+        }).populate('projectLeader');
     } catch(err) {
         return next(new ErrorHandling('Try again', 500));
     }
     if(project) {
         return next(new ErrorHandling('ProjectID already exist.', 422));
     }
+    let user;
+    try {
+        user = await User.findOne({_id: req.body.projectLeader});
+    } catch(err){
+        return next(new ErrorHandling('Cannot fetch user!', 500));
+    }
+    if(!user) {
+        return next(new ErrorHandling('User not found', 404));
+    }   
     project = new Project({
         projectName,
         projectIdentifier: projectIdentifier.toUpperCase(),
         projectDescription,
         startDate,
-        endDate
+        endDate, 
+        projectLeader
     });
-
+    // if (project.projectLeader._id.toString() !== req.userId) {
+    //     return next(new ErrorHandling('Not Authorized', 401));
+    // }
     try {
-        await project.save();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await project.save({session});
+        await user.projects.unshift(project);
+        await user.save({session});
+        await session.commitTransaction();
+
     } catch(err) {
         console.log(err);
         
@@ -94,6 +115,9 @@ exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
     if(!project) {
         return next(new ErrorHandling(`Project not found with ID: ${projectIdentifier}`, 404))
     }
+    if(project.projectLeader.toString() !== req.body.projectLeader){
+        return next(new ErrorHandling('Not Authorized', 401));
+    }
     const {projectName, projectDescription, startDate, endDate} = req.body;
     project.projectName = projectName;
     project.projectDescription = projectDescription;
@@ -111,15 +135,23 @@ exports.DELETE_PROJECT = async(req,res,next)=> {
     const {projectIdentifier} = req.params;
     let project;
     try {
-        project = await Project.findOne({projectIdentifier: projectIdentifier.toUpperCase()})
+        project = await Project.findOne({projectIdentifier: projectIdentifier.toUpperCase()}).populate('projectLeader');
     } catch(err){
         return next(new ErrorHandling('Project not fetched', 500))
     } 
     if(!project){
         return next(new ErrorHandling(`Project not found with ID: ${projectIdentifier}`, 404))
     }
+    if(project.projectLeader._id.toString() !== req.body.projectLeader) {
+        return next(new ErrorHandling('Not Authorized', 401));
+    }
     try {
-        await project.remove();
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await project.remove({session});
+        await project.projectLeader.projects.pull(project);
+        await project.projectLeader.save({session});
+        await session.commitTransaction();
     }catch(err){
         return next(new ErrorHandling('Project not deleted', 500))
     }
