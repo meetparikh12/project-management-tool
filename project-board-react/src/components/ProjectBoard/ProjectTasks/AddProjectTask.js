@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { trackPromise } from "react-promise-tracker";
+import config from 'react-global-configuration';
+
 toast.configure();
 class AddProjectTask extends Component {
     constructor(props){
@@ -42,15 +44,17 @@ class AddProjectTask extends Component {
             "status": this.state.status
         }
          trackPromise(
-            axios.post(`http://localhost:4200/api/projects/projectTask/${this.state.projectIdentifier}`, projectTask)
+            axios.post(`${config.get('backend_url_projectTasks')}/${this.state.projectIdentifier}`, projectTask)
             .then((res) => {
-                console.log(res.data.message);
+                toast.success(res.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 2000
+                });
                 this.props.history.push(`/projectboard/${this.state.projectIdentifier}`);
             }).catch((error) => {
-                console.log(error);
                 this.setState({isBtnDisabled: !this.state.isBtnDisabled});
                 toast.error(error.response.data.message[0].msg || error.response.data.message, {
-                    position: toast.POSITION.BOTTOM_RIGHT
+                    position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000
                 })
             }))
     }

@@ -6,14 +6,22 @@ import { getProjects } from '../actions/actions';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import {trackPromise} from 'react-promise-tracker';
+import { toast } from 'react-toastify';
+import config from 'react-global-configuration';
+
 class Dashboard extends Component {
   
     componentDidMount(){
         trackPromise(
         axios
-        .get("http://localhost:4200/api/projects")
+        .get(`${config.get('backend_url_projects')}`)
         .then((res) => this.props.getProjects(res.data.projects))
-        .catch((error) => console.log(error)))
+        .catch((error) => {
+            toast.error( error.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 2000
+            });
+        }))
     }
 
     render() {

@@ -6,6 +6,8 @@ import { deleteProject, getProjectById } from '../../actions/actions';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import {trackPromise} from 'react-promise-tracker';
+import config from 'react-global-configuration';
+
 class ProjectItem extends Component {
     
     constructor(props){
@@ -16,11 +18,16 @@ class ProjectItem extends Component {
     getProject(id){
         trackPromise(
         axios
-        .get(`http://localhost:4200/api/projects/${id}`)
+        .get(`${config.get('backend_url_projects')}/${id}`)
         .then((res)=> {
             this.props.getProjectById(res.data.project);
         })
-        .catch((error) => console.log(error.response.data)));
+        .catch((error) => {
+            toast.error(error.response.data.message, {
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 2000
+            });
+        }));
     }
 
     deleteProject(projectID){
@@ -30,7 +37,11 @@ class ProjectItem extends Component {
             axios
             .delete(`http://localhost:4200/api/projects/${projectID}`)
             .then((res) => {
-                this.props.deleteProject(projectID)
+                this.props.deleteProject(projectID);
+                toast.success(res.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 2000
+                });
             })
             .catch((error) => {
                 toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000})

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { PropTypes } from 'prop-types';
 import { toast } from 'react-toastify';
 import {trackPromise} from 'react-promise-tracker';
+import config from 'react-global-configuration';
 
 class Register extends Component {
 
@@ -45,10 +46,11 @@ class Register extends Component {
         }
         trackPromise(
             axios
-            .post("http://localhost:4200/api/users/register",newUser)
+            .post(`${config.get('backend_url_users')}/register`, newUser)
             .then((res)=> {
                 toast.success(res.data.message, {
-                    position: toast.POSITION.BOTTOM_RIGHT
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 2000
                 });
                 this.props.history.push("/login");
             })
@@ -57,7 +59,7 @@ class Register extends Component {
                     isBtnDisabled: !this.state.isBtnDisabled
                 })
                 toast.error(error.response.data.message[0].msg || error.response.data.message, 
-                    {position: toast.POSITION.BOTTOM_RIGHT});
+                    {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
             }))
     }
 

@@ -6,7 +6,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import store from './store';
 import LoadingSpinner from './shared/components/LoadingSpinner/LoadingSpinner';
-
+import "./config";
 ReactDOM.render(<Provider store={store}><App /><LoadingSpinner/></Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

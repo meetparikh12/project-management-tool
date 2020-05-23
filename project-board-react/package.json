@@ -12,6 +12,7 @@
     "jwt-decode": "^2.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-global-configuration": "^1.4.0",
     "react-loader-spinner": "^3.1.14",
     "react-promise-tracker": "^2.1.0",
     "react-redux": "^7.2.0",
@@ -26,7 +27,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:8081",
   "eslintConfig": {
     "extends": "react-app"
   },

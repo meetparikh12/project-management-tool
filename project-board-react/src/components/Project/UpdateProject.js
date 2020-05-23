@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { trackPromise } from "react-promise-tracker";
+import config from "react-global-configuration";
 toast.configure();
 class UpdateProject extends Component {
     
@@ -50,8 +51,12 @@ class UpdateProject extends Component {
         }
       trackPromise(
           axios
-          .patch(`http://localhost:4200/api/projects/${this.state.projectIdentifier}`, updatedProject)
+          .patch(`${config.get('backend_url_projects')}/${this.state.projectIdentifier}`, updatedProject)
           .then((res) => {
+              toast.success(res.data.message, {
+                  position: toast.POSITION.BOTTOM_RIGHT,
+                  autoClose: 2000
+              });
               this.props.history.push("/dashboard");
           })
           .catch((error) => {

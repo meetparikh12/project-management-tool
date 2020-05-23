@@ -8,6 +8,8 @@ import { SET_CURRENT_USER } from '../../actions/actionTypes';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {trackPromise} from 'react-promise-tracker';
+import config from 'react-global-configuration';
+
 toast.configure();
 class Login extends Component {
     constructor(props){
@@ -41,7 +43,7 @@ class Login extends Component {
         }
         // post => Login request
         trackPromise(
-        axios.post("http://localhost:4200/api/users/login",user)
+        axios.post(`${config.get('backend_url_users')}/login`, user)
         .then((res) => {
         // extract token from res.data
         const {token} = res.data;
@@ -51,11 +53,14 @@ class Login extends Component {
         setJWTToken(token);
         //decode token on React
         const decoded_token = jwt_decode(token);
+        toast.success("Hi, " + decoded_token.name, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+        autoClose: 2000
+        });
         //dispatch to our UserReducer
         this.props.setUserInfo(decoded_token, this.props.history);
         })
         .catch((error) => {
-            console.log(error);                
             this.setState({isBtnDisabled: !this.state.isBtnDisabled})
             toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
         }))

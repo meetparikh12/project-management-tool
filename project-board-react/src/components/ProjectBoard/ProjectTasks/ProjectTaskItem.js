@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import  PropTypes  from "prop-types";
 import { toast } from 'react-toastify';
 import { trackPromise } from "react-promise-tracker";
+import config from 'react-global-configuration';
 
 class ProjectTaskItem extends Component {
     
@@ -19,13 +20,16 @@ class ProjectTaskItem extends Component {
         if(window.confirm(`You are deleting Project Task ${projectSequence} , this action cannot be undone.`))
         {
             trackPromise(
-            axios.delete(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${projectSequence}`)
+            axios.delete(`${config.get('backend_url_projectTasks')}/${backlog_id}/${projectSequence}`)
             .then((res) => {
+                toast.success( res.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 2000
+                });
                 this.props.deleteProjectTask(projectSequence);
             })
             .catch((error) => {
-                console.log(error);
-                toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+                toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
             }));
         }
     

@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { getProjectTask } from '../../../actions/actions';
 import { toast } from 'react-toastify';
 import { trackPromise } from "react-promise-tracker";
+import config from 'react-global-configuration';
 
 class UpdateProjectTask extends Component {
 
@@ -58,15 +59,19 @@ class UpdateProjectTask extends Component {
         }
         trackPromise(
             axios
-            .patch(`http://localhost:4200/api/projects/projectTask/${this.state.projectIdentifier}/${this.state.taskId}`, updateProjectTask)
+            .patch(`${config.get('backend_url_projectTasks')}/${this.state.projectIdentifier}/${this.state.taskId}`, updateProjectTask)
             .then((res) => {
+                toast.success(res.data.message, {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                    autoClose: 2000
+                });
                 this.props.history.push(`/projectboard/${this.state.projectIdentifier}`);
             })
             .catch((error) => {
                 this.setState({isBtnDisabled: !this.state.isBtnDisabled})
-                console.log(error);
                 toast.error(error.response.data.message[0].msg || error.response.data.message, {
-                position: toast.POSITION.BOTTOM_RIGHT
+                position: toast.POSITION.BOTTOM_RIGHT,
+                autoClose: 2000
                 })
             }))
     }
@@ -152,10 +157,10 @@ const mapDispatchToProps = dispatchEvent => {
     return {
         getProjectTask: (backlog_id, taskId, history) => {
             trackPromise(
-              axios.get(`http://localhost:4200/api/projects/projectTask/${backlog_id}/${taskId}`)
+              axios.get(`${config.get('backend_url_projectTasks')}/${backlog_id}/${taskId}`)
                   .then((res) => dispatchEvent(getProjectTask(res.data.projectTask)))
                   .catch((error) => {
-                      toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT});
+                      toast.error(error.response.data.message, {position: toast.POSITION.BOTTOM_RIGHT, autoClose: 2000});
                       history.push("/dashboard");
                     }))
           }

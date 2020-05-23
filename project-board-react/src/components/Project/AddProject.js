@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import axios from 'axios';
 import {toast} from 'react-toastify';
 import {trackPromise} from 'react-promise-tracker';
+import config from 'react-global-configuration';
+
 toast.configure();
 class AddProject extends Component {
     constructor(props){
@@ -37,7 +39,7 @@ class AddProject extends Component {
         }
         trackPromise(
         axios
-        .post("http://localhost:4200/api/projects",newProject)
+        .post(`${config.get('backend_url_projects')}`, newProject)
         .then((res) => {
             alert(`Project with ID '${newProject.projectIdentifier.toUpperCase()}' created successfully.`);
             this.props.history.push("/dashboard");
