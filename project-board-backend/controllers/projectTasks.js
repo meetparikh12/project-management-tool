@@ -66,6 +66,12 @@ exports.CREATE_PROJECT_TASK = async (req,res,next)=> {
     if(!(!!priorityCheck[priority])){
         priority = "LOW"
     }
+    if (dueDate == ""){
+        dueDate = Date.now();
+    }
+    if (Date.parse(dueDate) < Date.parse(new Date())) {
+        return next(new ErrorHandling('Do not use past dates.', 422));
+    }
     projectTask = new ProjectTask({
         summary, acceptanceCriteria, dueDate, status, priority, taskId, project: projectIdentifier
     })
@@ -136,14 +142,14 @@ exports.GET_SINGLE_PROJECT_TASK = async (req,res,next)=> {
 
     let {projectIdentifier, taskId} = req.params;
     projectIdentifier = projectIdentifier.toUpperCase();
-    let project;
+    let currentProject;
     try {
-        project = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
+        currentProject = await user.projects.find((project)=> project.projectIdentifier === projectIdentifier);
     } catch(err) {
         return next(new ErrorHandling('Project not fetched!', 500));
     } 
 
-    if(!project) {
+    if(!currentProject) {
         return next(new ErrorHandling(`Project not found with ID '${projectIdentifier}'`, 404));
     }
     let projectTask;
@@ -163,7 +169,17 @@ exports.GET_SINGLE_PROJECT_TASK = async (req,res,next)=> {
         return next(new ErrorHandling(`Project Task '${taskId}' does not exist in Project with ID '${projectIdentifier}'`, 404));
     }    
 
-    res.status(200).json({projectTask});
+    const {_id, summary, acceptanceCriteria, project, status, priority, dueDate} = projectTask;
+    res.status(200).json({projectTask: {
+        _id,
+        summary, 
+        acceptanceCriteria, 
+        taskId,
+        status,
+        projectIdentifier: project,
+        priority,
+        dueDate: new Date(dueDate).toISOString().substr(0, 10)
+    }});
 
 }
 
@@ -230,6 +246,12 @@ exports.UPDATE_PROJECT_TASK = async (req,res,next)=> {
     }
     if (!(!!priorityCheck[priority])) {
         priority = "LOW"
+    }
+    if (dueDate == "") {
+        dueDate = Date.now();
+    }
+    if (Date.parse(dueDate) < Date.parse(new Date())) {
+        return next(new ErrorHandling('Do not use past dates.', 422));
     }
     projectTask.summary = summary;
     projectTask.acceptanceCriteria = acceptanceCriteria;

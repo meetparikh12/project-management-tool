@@ -12,7 +12,7 @@ exports.CREATE_PROJECT = async (req, res, next) => {
         err.status = 422;
         return next(err);
     }
-    const {
+    let {
         projectName,
         projectIdentifier,
         projectDescription,
@@ -39,6 +39,16 @@ exports.CREATE_PROJECT = async (req, res, next) => {
     if(!user) {
         return next(new ErrorHandling('User not found', 404));
     }   
+    if(startDate == "" || endDate == ""){
+        startDate = Date.now();
+        endDate = Date.now();
+    } 
+    if( Date.parse(startDate) < Date.parse(new Date()) || Date.parse(endDate) < Date.parse(new Date()) ){
+        return next(new ErrorHandling('Do not use past dates.', 422));
+    } 
+    if(Date.parse(startDate) > Date.parse(endDate)) {  
+        return next(new ErrorHandling('Please enter valid dates.', 422));
+    } 
     project = new Project({
         projectName,
         projectIdentifier: projectIdentifier.toUpperCase(),
@@ -94,7 +104,17 @@ exports.GET_SINGLE_PROJECT = async (req,res,next) => {
         return next(new ErrorHandling('Not Authorized', 401))
     }
 
-    res.status(200).json({project});
+    const { _id, projectName, projectDescription, projectLeader, startDate, endDate} = project;
+
+    res.status(200).json({project: {
+        _id,
+        projectName,
+        projectDescription, 
+        projectIdentifier,
+        projectLeader, 
+        startDate: new Date(startDate).toISOString().substr(0,10),
+        endDate: new Date(endDate).toISOString().substr(0,10)
+    }});
 }
 
 exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
@@ -118,7 +138,17 @@ exports.UPDATE_PROJECT_INFO = async (req,res,next)=> {
     if(project.projectLeader.toString() !== req.userId){
         return next(new ErrorHandling('Not Authorized', 401));
     }
-    const {projectName, projectDescription, startDate, endDate} = req.body;
+    let {projectName, projectDescription, startDate, endDate} = req.body;
+    if (startDate == "" || endDate == "") {
+        startDate = Date.now();
+        endDate = Date.now();
+    }
+    if (Date.parse(startDate) < Date.parse(new Date()) || Date.parse(endDate) < Date.parse(new Date())) {
+        return next(new ErrorHandling('Do not use past dates.', 422));
+    }
+    if (Date.parse(startDate) > Date.parse(endDate)) {
+        return next(new ErrorHandling('Please enter valid dates.', 422));
+    }
     project.projectName = projectName;
     project.projectDescription = projectDescription;
     project.startDate = startDate;
