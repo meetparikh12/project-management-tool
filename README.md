@@ -1,7 +1,5 @@
 # project-board
-A Personal Project Management Tool (based in JIRA) for users who can add new projects as per they are working on. 
-Users can add a unique project ID, project title along with project desciption as well as start date and end date.
-Within a project, users can create their project tasks where they can also set the priority to LOW/MEDIUM/HIGH for each project task.
-Authentication and Authorization has been added using JWT for security.
-This Application is created using React and Redux for state management and Spring Boot as backend. Rest APIs are created in Spring boot for transfering JSON data. MySQL is used as database.
+A Personal Project Management Tool which is similar as a clone for JIRA / TRELLO.
+This web application is created using MERN stack for users to manage their projects easily. 
+User once authenticated can add new projects as per they are working and can also manage project-tasks based on priority and current status of task.
 
