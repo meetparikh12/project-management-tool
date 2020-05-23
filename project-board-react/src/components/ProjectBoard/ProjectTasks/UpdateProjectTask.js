@@ -34,7 +34,7 @@ class UpdateProjectTask extends Component {
         
         if(nextProps.currentTask){
         this.setState({
-            projectIdentifier: nextProps.currentTask.project,
+            projectIdentifier: nextProps.currentTask.projectIdentifier,
             summary: nextProps.currentTask.summary,
             acceptanceCriteria: nextProps.currentTask.acceptanceCriteria,
             dueDate: nextProps.currentTask.dueDate,
